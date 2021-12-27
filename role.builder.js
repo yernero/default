@@ -43,8 +43,9 @@ var roleBuilder = {
 				}
 				// creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});
 			} else {
-				var sources = creep.room.find(FIND_STRUCTURES)
-					.filter(structure => [STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy > 1500);
+				var sources = creep.room.find(FIND_STRUCTURES, {
+					filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+								   i.store[RESOURCE_ENERGY] > 0});
 
 				//.filter(structure => structure.store.energy >0);
 				//console.log(sources[0].store.energy);

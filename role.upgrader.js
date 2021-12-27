@@ -25,9 +25,9 @@ var roleUpgrader = {
 		} else {
 
 
-			var targets = creep.room.find(FIND_STRUCTURES)
-				.filter(structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1)
-				.filter(structure => structure.store.energy > 100);
+			var targets = creep.room.find(FIND_STRUCTURES, {
+				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+							   i.store[RESOURCE_ENERGY] > 0});
 			//console.log(targets);
 
 

@@ -138,13 +138,13 @@ module.exports.loop = function () {
                 Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE], newName, { memory: { role: 'harvester', team: 0 } });
             }
             //Upgraders
-        } else if (upgraders.length < 8) {
+        } else if (upgraders.length < 3) {
 
             var newName = "uppity" + Game.time;
             console.log("Spawning new uppity: " + newName);
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
             //Builders
-        } else if (builders.length < 4) {
+        } else if (builders.length < 3) {
 
             var newName = "Bob" + Game.time;
             console.log("Spawning new bob the builder: " + newName);

@@ -44,7 +44,7 @@ var roleFiller = {
 					}
 				}
 			} else {
-
+				console.log(1);
 				var targets = creep.room.find(FIND_STRUCTURES,
 					{ filter: (structure) => { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity; } });
 				if (targets.length < 1) {
@@ -56,8 +56,10 @@ var roleFiller = {
 				}
 			}
 		} else {
-			var sources = creep.room.find(FIND_STRUCTURES).filter(structure => [STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy > 0);
-			//	console.log(sources);
+			var sources = creep.room.find(FIND_STRUCTURES, {
+				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+							   i.store[RESOURCE_ENERGY] > 0});
+			//console.log(sources);
 			//console.log(sources[0].store.energy);
 			//if(sources[0].store.energy == 0){
 			// console.log("harvesters need to work harder");

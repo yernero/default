@@ -45,9 +45,11 @@ var roleRepairer = {
 				}
 			}
 		} else {
-			var sources = creep.room.find(FIND_STRUCTURES)
-				.filter(structure => [STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1)
-				.filter(structure => structure.store.energy > 0);
+			
+			var sources = creep.room.find(FIND_STRUCTURES, {
+				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+							   i.store[RESOURCE_ENERGY] > 0});
+				//console.log(sources);
 
 			if (creep.withdraw(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#000000' } });
