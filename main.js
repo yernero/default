@@ -120,7 +120,7 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName,
                 { memory: { role: 'towerGuard' } });
             //Fillers
-        } else if (fillers.length < 0) {
+        } else if (fillers.length < 1) {
 
             var newName = 'Filler' + Game.time;
             console.log('Spawning new Filler: ' + newName);
