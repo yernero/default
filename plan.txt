@@ -1,0 +1,24 @@
+Screeps logic
+Starting: spawn, sources, controller
+
+clear dead creeps
+find myroom
+If no creeps
+	If containers exist
+		create a filler
+		then create a harvester
+	no containers
+		create a harvester
+
+creeps
+	for every creep
+		check role then execute
+		add creep to count
+	
+	
+	
+	
+	
+TODO
+	Determines closest energy sources
+	

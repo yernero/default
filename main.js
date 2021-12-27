@@ -9,26 +9,46 @@ var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
 module.exports.loop = function () {
-    
-   
+
+
     for (var name in Memory.creeps) {
         //clear dead creeps from memory
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
-      
+
 
     }
     var myroom;
-    for(let key in Game.rooms){
-        let room = Game.rooms[key]
-        if(room.controller && room.controller.my){
-            myroom = room;
-            break;
+    //checks if roomName is in memory
+    if (_.has(Memory, 'roomName')) {
+        //If roomName is stored, convert into a room for myroom
+        myroom = Game.rooms[Memory.roomName];
+    } else {
+        //searches every room 
+        for (let key in Game.rooms) {
+            let room = Game.rooms[key]
+            //checks if room has a controller and is controlled by me
+            if (room.controller && room.controller.my) {
+                //stores room name
+                Memory.roomName = key;
+                break;
+            }
         }
     }
     //console.log("room" +myroom);
+    //finds room and puts in myroom without using memory
+    /*
+    for (let key in Game.rooms) {
+       let room = Game.rooms[key]
+       if (room.controller && room.controller.my) {
+           myroom = room;
+           break;
+       }
+   }*/
+
+
     //var myroom = Game.rooms["W8S53"];
     //var ruin = Game.getObjectById('5f29b8885eb8e32fb300fa06');
 
@@ -126,7 +146,7 @@ module.exports.loop = function () {
             console.log('Spawning new Filler: ' + newName);
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, { memory: { role: 'filler' } });
             //Harvesters
-        } else if (harvesters.length < 4) {
+        } else if (harvesters.length < 6) {
 
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + Hteam1.length);
