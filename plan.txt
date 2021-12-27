@@ -1,6 +1,6 @@
 Screeps logic
 Starting: spawn, sources, controller
-
+main
 clear dead creeps
 find myroom
 If no creeps
@@ -17,8 +17,31 @@ creeps
 	
 	
 	
-	
-	
 TODO
 	Determines closest energy sources
-	
+	Create role arrays inside the check role loop instead of with filter
+
+Builder
+
+//TODO
+
+filler
+
+//TODO
+
+harvester
+
+//TODO
+
+repairer
+
+//TODO
+	create a road team
+
+towerguard
+
+//TODO
+
+Upgrader
+
+//TODO

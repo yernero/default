@@ -137,7 +137,7 @@ module.exports.loop = function () {
             //create a towerguard
             var newName = 'Tower Guard ' + Game.time;
             console.log('Spawning new Guard: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName,
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE,HIT,HIT,ATTACK], newName,
                 { memory: { role: 'towerGuard' } });
             //Fillers
         } else if (fillers.length < 1) {

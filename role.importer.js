@@ -27,7 +27,7 @@ var roleImporter = {
 						creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
 					}
 				}
-				console.log("dd" + targets);
+				//console.log("dd" + targets);
 				if (creep.carry.energy == 0) {
 					creep.memory.gathering = true;
 				}
