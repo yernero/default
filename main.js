@@ -9,13 +9,34 @@ var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
 module.exports.loop = function () {
-    var myroom = Game.rooms["W8S53"];
+    
+   
+    for (var name in Memory.creeps) {
+        //clear dead creeps from memory
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+      
+
+    }
+    var myroom;
+    for(let key in Game.rooms){
+        let room = Game.rooms[key]
+        if(room.controller && room.controller.my){
+            myroom = room;
+            break;
+        }
+    }
+    //console.log("room" +myroom);
+    //var myroom = Game.rooms["W8S53"];
     //var ruin = Game.getObjectById('5f29b8885eb8e32fb300fa06');
 
+    var countCreeps = 0;
     //run each role
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
-
+        countCreeps++;
         switch (creep.memory.role) {
             case "harvester":
                 roleHarvester.run(creep);
@@ -52,21 +73,11 @@ module.exports.loop = function () {
     //Look for enemies
     var redTarget = 0;//myroom.find( FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
+        //use towers to attack enemies
         var towers = myroom.find(FIND_STRUCTURES, { filter: o => o.structureType === STRUCTURE_TOWER }); +
             towers.forEach(function (tower) {
                 Game.getObjectById(tower.id).attack(redTarget[0]);
             });
-    }
-
-    //clear dead creeps from memory
-    var countCreeps = 0;
-    for (var name in Memory.creeps) {
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-        countCreeps++;
-
     }
 
     //Roles
