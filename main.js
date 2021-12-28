@@ -114,15 +114,7 @@ module.exports.loop = function () {
     var Hteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "harvester");
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
 
-    //store pixels
-    if (Game.time % 5 == 0) {
-        console.log('\n\n\n');
-        console.log(Game.cpu.bucket + "/5000 new pixel");
-        console.log(myroom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
-        console.log("Fillers: " + fillers.length + '\tHarvesters: ' + harvesters.length + "\tTower Guards: " + towerGuards.length + '\tUpgraders: ' + upgraders.length + '\tBuilders: ' + builders.length + '\tRepairers: ' + repairers.length + "\tSettlers: " + settlers.length + "\tImports: " + importers.length);
-        console.log("Team 1 Harvesters: " + Hteam1.length + " Team 1 Builders : " + Bteam1.length);
-        //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
-    }
+
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
 
@@ -137,7 +129,7 @@ module.exports.loop = function () {
             //create a towerguard
             var newName = 'Tower Guard ' + Game.time;
             console.log('Spawning new Guard: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE,HIT,HIT,ATTACK], newName,
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK], newName,
                 { memory: { role: 'towerGuard' } });
             //Fillers
         } else if (fillers.length < 1) {
@@ -208,7 +200,19 @@ module.exports.loop = function () {
             { align: 'left', opacity: 0.8 }
         );
     }
-
+    //Display data
+    if (Game.time % 5 == 0) {
+        console.log('\n\n\n');
+        //check cpu stored
+        console.log(Game.cpu.bucket + "/5000 new pixel");
+        //check energy and creeps
+        console.log(myroom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
+        //check roles
+        console.log("Fillers: " + fillers.length + '\tHarvesters: ' + harvesters.length + "\tTower Guards: " + towerGuards.length + '\tUpgraders: ' + upgraders.length + '\tBuilders: ' + builders.length + '\tRepairers: ' + repairers.length + "\tSettlers: " + settlers.length + "\tImports: " + importers.length);
+        //check teams
+        console.log("Team 1 Harvesters: " + Hteam1.length + " Team 1 Builders : " + Bteam1.length);
+        //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
+    }
     Game.cpu.generatePixel()
 }
 //you can use room.pos.find to get an array of structures in the room, filter it by those that have hits less than hitsMax, use the lodash sortBy feature to sort them by hits ... then send your repairers or towers after the first element in that array

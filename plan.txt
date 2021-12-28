@@ -21,6 +21,8 @@ TODO
 	Determines closest energy sources
 	Create role arrays inside the check role loop instead of with filter
 
+TODO
+	Create different path colors for each role
 Builder
 
 //TODO
