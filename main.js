@@ -8,6 +8,8 @@ var towerGuard = require("role.towerGuard");
 var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
+var rolespawnFarmer = require("role.spawnFarmer");
+
 module.exports.loop = function () {
 
 
@@ -84,6 +86,8 @@ module.exports.loop = function () {
                 break;
             case "importer":
                 roleImporter.run(creep);
+            case "spawnFarmer":
+                roleSpawnFarmer.run(creep);
             default:
                 break;
         }
@@ -109,7 +113,7 @@ module.exports.loop = function () {
     var settlers = _.filter(Game.creeps, (creep) => creep.memory.role == "settler");
     var importers = _.filter(Game.creeps, (creep) => creep.memory.role == "importer");
     var towerGuards = _.filter(Game.creeps, (creep) => creep.memory.role == "towerGuard");
-
+    var sourceFarmers = _.filter(Game.creeps, (creep) => creep.memory.role == "sourceFarmer");
     //Teams
     var Hteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "harvester");
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
@@ -121,7 +125,11 @@ module.exports.loop = function () {
     //check ability to create new screep
     if (myroom.energyAvailable > 200) {
         //see if room has towers
-        var towers = myroom.find(FIND_STRUCTURES, { filter: (structure) => structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity });
+        var towers = myroom.find(FIND_STRUCTURES,
+            {
+                filter: (structure) => structure.structureType == STRUCTURE_TOWER
+                    && structure.energy < structure.energyCapacity
+            });
         //console.log("Towers: " + towers.length);
 
         //if room has towers, and no tower guard
@@ -129,32 +137,48 @@ module.exports.loop = function () {
             //create a towerguard
             var newName = 'Tower Guard ' + Game.time;
             console.log('Spawning new Guard: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK], newName,
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
+                newName,
                 { memory: { role: 'towerGuard' } });
+        } else if (sourceFarmers < 0) {
+            var newName = 'sourceFarmer' + Game.time;
+            console.log('Spawning new Source Farmer: ' + newName);
+            Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+                newName,
+                { memory: { role: 'sourceFarmer', emptying: false} });
+
             //Fillers
         } else if (fillers.length < 1) {
 
             var newName = 'Filler' + Game.time;
             console.log('Spawning new Filler: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, { memory: { role: 'filler' } });
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
+                newName,
+                { memory: { role: 'filler',storing: false } });
             //Harvesters
         } else if (harvesters.length < 6) {
 
             var newName = 'Harvester' + Game.time;
-            console.log('Spawning new harvester: ' + Hteam1.length);
+            console.log('Spawning new harvester: ' + newName);
 
             //create teams 0 and 1
             if (Hteam1.length < 0) {
-                Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE], newName, { memory: { role: 'harvester', team: 1 } });
+                Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'harvester', storing: false,team: 1 } });
             } else {
-                Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE], newName, { memory: { role: 'harvester', team: 0 } });
+                Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'harvester', storing: false,team: 0 } });
             }
             //Upgraders
-        } else if (upgraders.length < 3) {
+        } else if (upgraders.length < 7) {
 
             var newName = "uppity" + Game.time;
             console.log("Spawning new uppity: " + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
+                newName,
+                { memory: { role: 'upgrader', upgrading: false } });
             //Builders
         } else if (builders.length < 3) {
 
@@ -162,10 +186,14 @@ module.exports.loop = function () {
             console.log("Spawning new bob the builder: " + newName);
             //teams 1 and 2
             if (Bteam1.length > 1) {
-                Game.spawns['HELL'].spawnCreep([WORK, CARRY, WORK, MOVE], newName, { memory: { role: 'builder', building: false, team: 2 } });
+                Game.spawns['HELL'].spawnCreep([WORK, CARRY, WORK, MOVE],
+                    newName,
+                    { memory: { role: 'builder', building: false, team: 2 } });
                 //team: 2
             } else {
-                Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE], newName, { memory: { role: 'builder', team: 1 } });
+                Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'builder', team: 1 } });
                 //team: 1
             }
             //Handys / Repairers
@@ -173,19 +201,25 @@ module.exports.loop = function () {
 
             var newName = 'handy' + Game.time;
             console.log('Spawning new handy: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,], newName, { memory: { role: 'repairer' } });
+            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
+                newName,
+                { memory: { role: 'repairer' } });
             //Settlers
         } else if (settlers.length < 0) {
 
             var newName = "columbus" + Game.time;
             console.log("spawning new settler: " + newName);
-            Game.spawns['HELL'].spawnCreep([MOVE, MOVE, MOVE, CLAIM, CARRY, WORK], newName, { memory: { role: 'settler', room: myroom } });
+            Game.spawns['HELL'].spawnCreep([MOVE, MOVE, MOVE, CLAIM, CARRY, WORK],
+                newName,
+                { memory: { role: 'settler', room: myroom } });
             //Importers
         } else if (importers.length < 0) {
 
             var newName = "import" + Game.time;
             console.log("Spawning new importer: " + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE], newName, { memory: { role: 'importer' } });
+            Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE],
+                newName,
+                { memory: { role: 'importer' } });
 
         }
     }
