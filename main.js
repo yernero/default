@@ -8,7 +8,7 @@ var towerGuard = require("role.towerGuard");
 var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
-var rolespawnFarmer = require("role.spawnFarmer");
+var roleSpawnFarmer = require("role.spawnFarmer");
 
 module.exports.loop = function () {
 
@@ -140,7 +140,7 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
                 newName,
                 { memory: { role: 'towerGuard' } });
-        } else if (sourceFarmers < 0) {
+        } else if (sourceFarmers < 3) {
             var newName = 'sourceFarmer' + Game.time;
             console.log('Spawning new Source Farmer: ' + newName);
             Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
@@ -156,7 +156,7 @@ module.exports.loop = function () {
                 newName,
                 { memory: { role: 'filler',storing: false } });
             //Harvesters
-        } else if (harvesters.length < 6) {
+        } else if (harvesters.length < 1) {
 
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);
