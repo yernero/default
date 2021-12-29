@@ -166,7 +166,7 @@ module.exports.loop = function () {
                 newName,
                 { memory: { role: 'filler', storing: false } });
             //Harvesters
-        } else if (harvesters.length < 1) {
+        } else if (harvesters.length < 2) {
 
             var newName = 'Harvester' + Game.time;
             console.log('Spawning new harvester: ' + newName);

@@ -40,11 +40,14 @@ var roleHarvester = {
         }
       }
     } else {
+      //change modes
       if (creep.store.energy == creep.store.getCapacity(RESOURCE_ENERGY)) {
         creep.memory.storing = true;
         creep.say('⚡');
       } else {
         var sources = creep.room.find(FIND_SOURCES);
+        //.log("Sources in " + creep.room + " " + sources)
+
         //team 1
         if (creep.memory.team == 1) {
           if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
@@ -54,8 +57,8 @@ var roleHarvester = {
         } else {
           //console.log(creep.harvest(sources[0]))
 
-          if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
+          if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#FFC0CB' } });
           } else {
             var targets = creep.room.find(FIND_STRUCTURES, {
               filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
