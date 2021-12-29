@@ -8,7 +8,6 @@ var towerGuard = require("role.towerGuard");
 var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
-var roleSpawnFarmer = require("role.spawnFarmer");
 var roleSourceFarmer = require("role.sourceFarmer");
 
 
@@ -119,7 +118,8 @@ module.exports.loop = function () {
     //Teams
     var Hteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "harvester");
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
-
+    var sfTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "sourceFarmer")
+    var sfTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "sourceFarmer")
 
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
@@ -135,6 +135,7 @@ module.exports.loop = function () {
         //console.log("Towers: " + towers.length);
 
         //if room has towers, and no tower guard
+
         if (towers.length > 0 && towerGuards < 1) {
             //create a towerguard
             var newName = 'Tower Guard ' + Game.time;
@@ -142,12 +143,19 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
                 newName,
                 { memory: { role: 'towerGuard' } });
-        } else if (sourceFarmers < 4) {
+        } else if (sourceFarmers.length < 4) {
             var newName = 'sourceFarmer' + Game.time;
             console.log('Spawning new Source Farmer: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
-                newName,
-                { memory: { role: 'sourceFarmer', emptying: false } });
+            if(sfTeam0.length < 4){
+                Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'sourceFarmer', emptying: false, team: 0 } });
+            }else if(sfTeam1.length < 3){
+                Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'sourceFarmer', emptying: false, team: 1 } });
+            }
+            
 
             //Fillers
         } else if (fillers.length < 1) {
