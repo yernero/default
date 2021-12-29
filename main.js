@@ -143,14 +143,14 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
                 newName,
                 { memory: { role: 'towerGuard' } });
-        } else if (sourceFarmers.length < 4) {
+        } else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
             console.log('Spawning new Source Farmer: ' + newName);
-            if(sfTeam0.length < 4){
+            if(sfTeam0.length < 3){
                 Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 0 } });
-            }else if(sfTeam1.length < 3){
+            }else if(sfTeam1.length < 4){
                 Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 1 } });
