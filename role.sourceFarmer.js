@@ -1,5 +1,5 @@
 var roleUpgrader = require("role.upgrader");
-var roleSpawnFarmer = {
+var roleSourceFarmer = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
@@ -11,10 +11,15 @@ var roleSpawnFarmer = {
                 creep.say('⛏️');
 
             } else {
+                //find containers and storage with storage open
                 var targets = creep.room.find(FIND_STRUCTURES).filter(
                     structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
                         structure.structureType) !== -1).filter(
-                            structure => structure.store.energy < structure.store.getCapacity());
+                            structure => structure.store.energy < structure.store.getCapacity()).filter(
+                                structure => creep.pos.getRangeTo(structure) < 2
+                            );
+                //current container is chosen manually, need to find closest container. 
+                console.log(targets);
                 if (creep.transfer(targets[targets.length-1], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[targets.length-1], { visualizePathStyle: { stroke: '#FFFFFF' } });
                 }
@@ -98,4 +103,4 @@ var roleSpawnFarmer = {
 
 };
 
-module.exports = roleSpawnFarmer;
+module.exports = roleSourceFarmer;
