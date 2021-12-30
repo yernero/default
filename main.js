@@ -90,6 +90,9 @@ module.exports.loop = function () {
             case "sourceFarmer":
                 roleSourceFarmer.run(creep);
             default:
+                creep.memory.role = "sourceFarmer";
+                creep.memory.team = 0;
+                roleSourceFarmer.run(creep);
                 break;
         }
 

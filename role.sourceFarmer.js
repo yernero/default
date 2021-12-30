@@ -4,6 +4,9 @@ var roleSourceFarmer = {
     /** @param {Creep} creep **/
     run: function (creep) {
         //emptying energy 
+        if(!creep.memory.team){
+            creep.memory.team = 0;
+        }
         if (creep.memory.emptying) {
             //creep is empty so switch modes
             if (creep.store.energy == 0) {
@@ -17,7 +20,7 @@ var roleSourceFarmer = {
                         structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
                             structure.structureType) !== -1).filter(
                                 structure => structure.store.energy < structure.store.getCapacity()).filter(
-                                    structure => creep.pos.getRangeTo(structure) < 2
+                                    structure => creep.pos.getRangeTo(structure) < 10
                                 );
                     //current container is chosen manually from structures less than 2 spots away, need to find closest container. 
                     //(targets);
@@ -52,7 +55,7 @@ var roleSourceFarmer = {
             } else {
                 //find a source
                 var sources = creep.room.find(FIND_SOURCES);
-                console.log("Sources in room" + sources)
+                //console.log("Sources in room" + sources)
                 // team 1
                 if (creep.memory.team == 0 || sources.length <2) {
                     if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
