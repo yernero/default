@@ -4,7 +4,7 @@ var roleSourceFarmer = {
     /** @param {Creep} creep **/
     run: function (creep) {
         //emptying energy 
-        if(!creep.memory.team){
+        if (!creep.memory.team) {
             creep.memory.team = 0;
         }
         if (creep.memory.emptying) {
@@ -24,9 +24,18 @@ var roleSourceFarmer = {
                                 );
                     //current container is chosen manually from structures less than 2 spots away, need to find closest container. 
                     //(targets);
+                    if (targets.length == 0) {
+                        // console.log(" team 1 out")
+                        targets = creep.room.find(FIND_STRUCTURES).filter(
+                            structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
+                                structure.structureType) !== -1).filter(
+                                    structure => structure.store.energy < structure.store.getCapacity());
+                    }
                     if (creep.transfer(targets[targets.length - 1], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#FFFFFF' } });
                     }
+
+
                 } else if (creep.memory.team === 1) {
                     //find containers and storage with storage open
                     var targets = creep.room.find(FIND_STRUCTURES).filter(
@@ -37,9 +46,17 @@ var roleSourceFarmer = {
                                 );
                     //current container is chosen manually from structures less than 2 spots away, need to find closest container. 
                     //console.log(targets);
+                    if (targets.length == 0) {
+                        // console.log(" team 1 out")
+                        targets = creep.room.find(FIND_STRUCTURES).filter(
+                            structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
+                                structure.structureType) !== -1).filter(
+                                    structure => structure.store.energy < structure.store.getCapacity());
+                    }
                     if (creep.transfer(targets[targets.length - 1], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#FFFFFF' } });
                     }
+
                 }
             }
             //collecting energy
@@ -56,17 +73,17 @@ var roleSourceFarmer = {
                 //find a source
                 var sources = creep.room.find(FIND_SOURCES);
                 //console.log("Sources in room" + sources)
-                // team 1
-                if (creep.memory.team == 0 || sources.length <2) {
+                // team 0
+                if (creep.memory.team == 0 || sources.length < 2) {
                     if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
                     }
-                    //team 0 or none
-                } else if (creep.memory.team == 1 && sources.length >1) {
+                    //team 1
+                } else if (creep.memory.team == 1 && sources.length > 1) {
                     if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
                         console.log(
                             creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#FFFFFF' } })
-                            )
+                        )
                     }
                 }
             }

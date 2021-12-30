@@ -163,7 +163,7 @@ module.exports.loop = function () {
             
 
             //Fillers
-        } else if ((Game.creeps.length < 10 && fillers.length < 3) || (Game.creeps.length > 10 && fillers.length <1) ) {
+        } else if ((Game.creeps.length < 10 && fillers.length < 3) || (Game.creeps.length > 10 && fillers.length <3) ) {
 
             var newName = 'Filler' + Game.time;
             console.log('Spawning new Filler: ' + newName);
