@@ -4,7 +4,9 @@ var roleRepairer = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
-
+		if(!creep.memory.reparing){
+			creep.memory.repairing = false;
+		}
 		if (creep.memory.repairing && creep.carry.energy == 0) {
 			creep.memory.repairing = false;
 			creep.say('🔄');
@@ -16,7 +18,7 @@ var roleRepairer = {
 
 		if (creep.memory.repairing) {
 			var targets = creep.room.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
-			//console.log(targets);
+			console.log("repair these " +targets);
 
 			if (targets.length < 1) {
 				creep.memory.upgrading = true;
@@ -47,7 +49,8 @@ var roleRepairer = {
 		} else {
 			
 			var sources = creep.room.find(FIND_STRUCTURES, {
-				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+				filter: (i) => (i.structureType == STRUCTURE_CONTAINER ||
+					 i.structureType == STRUCTURE_STORAGE) &&
 							   i.store[RESOURCE_ENERGY] > 0});
 				//console.log(sources);
 

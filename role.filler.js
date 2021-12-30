@@ -6,7 +6,7 @@ var roleFiller = {
 
 		if (creep.memory.storing && creep.carry.energy == 0) {
 			creep.memory.storing = false;
-			creep.say('🔄 harvest');
+			creep.say('🔄 collecting');
 		}
 		
 		/* var targets = creep.room.find(FIND_STRUCTURES,{filter: (structure) => return (structure.structureType == STRUCTURE_STORAGE ||structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity() > 0});
@@ -60,10 +60,10 @@ var roleFiller = {
 			//switch modes
 			if (creep.carry.energy == creep.carryCapacity) {
 				creep.memory.storing = true;
-				creep.say('⚡ storing');
+				creep.say('⚡ Filling');
 			}
 			var sources = creep.room.find(FIND_STRUCTURES, {
-				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
+				filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
 							   i.store[RESOURCE_ENERGY] > 0});
 			//console.log(sources);
 			//console.log(sources[0].store.energy);
