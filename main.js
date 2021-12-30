@@ -87,8 +87,10 @@ module.exports.loop = function () {
                 break;
             case "importer":
                 roleImporter.run(creep);
+                break;
             case "sourceFarmer":
                 roleSourceFarmer.run(creep);
+                break;
             default:
                 creep.memory.role = "sourceFarmer";
                 creep.memory.team = 0;
@@ -146,7 +148,7 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
                 newName,
                 { memory: { role: 'towerGuard' } });
-        } else if (sourceFarmers.length < 7) {
+        } else if (sourceFarmers.length < 6) {
             var newName = 'sourceFarmer' + Game.time;
             console.log('Spawning new Source Farmer: ' + newName);
             if(sfTeam0.length < 3){
@@ -161,7 +163,7 @@ module.exports.loop = function () {
             
 
             //Fillers
-        } else if (fillers.length < 1) {
+        } else if ((Game.creeps.length < 10 && fillers.length < 3) || (Game.creeps.length > 10 && fillers.length <1) ) {
 
             var newName = 'Filler' + Game.time;
             console.log('Spawning new Filler: ' + newName);
@@ -256,6 +258,7 @@ module.exports.loop = function () {
         console.log(myroom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
         //check roles
         console.log("Source Farmers: " + sourceFarmers.length +
+            " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
             "\tFillers: " + fillers.length +
             '\tHarvesters: ' + harvesters.length +
             "\tTower Guards: " + towerGuards.length +

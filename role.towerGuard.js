@@ -3,8 +3,12 @@ var roleUpgrader = require("role.upgrader");
 var towerGuard = {
 
 	run: function (creep) {
-		var towers = creep.room.find(FIND_STRUCTURES, { filter: (structure) => structure.structureType == "tower" && structure.store.getFreeCapacity([RESOURCE_ENERGY]) > 0 });
-		console.log("towers: " +towers);
+		var towers = creep.room.find(FIND_STRUCTURES,
+			{
+				filter: (structure) => structure.structureType == "tower" &&
+					structure.store.getFreeCapacity([RESOURCE_ENERGY]) > 0
+			});
+		console.log("towers: " + towers);
 
 		//creep.memory.filling = false;
 		if (creep.memory.filling) {
@@ -44,7 +48,7 @@ var towerGuard = {
 			}
 
 		}
-		
+
 	}
 }
 module.exports = towerGuard;
