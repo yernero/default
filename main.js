@@ -148,28 +148,28 @@ module.exports.loop = function () {
             Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
                 newName,
                 { memory: { role: 'towerGuard' } });
+            //Fillers
+        } else if (fillers.length < 3) {
+            var newName = 'Filler' + Game.time;
+            console.log('Spawning new Filler: ' + newName);
+            Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
+                newName,
+                { memory: { role: 'filler', storing: false } });
         } else if (sourceFarmers.length < 6) {
             var newName = 'sourceFarmer' + Game.time;
             console.log('Spawning new Source Farmer: ' + newName);
-            if(sfTeam0.length < 3){
+            if (sfTeam0.length < 3) {
                 Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 0 } });
-            }else if(sfTeam1.length < 4){
+            } else if (sfTeam1.length < 4) {
                 Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 1 } });
             }
-            
 
-            //Fillers
-        } else if ((Game.creeps.length < 10 && fillers.length < 3) || (Game.creeps.length > 10 && fillers.length <3) ) {
 
-            var newName = 'Filler' + Game.time;
-            console.log('Spawning new Filler: ' + newName);
-            Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                newName,
-                { memory: { role: 'filler', storing: false } });
+
             //Harvesters
         } else if (harvesters.length < 2) {
 
@@ -251,7 +251,7 @@ module.exports.loop = function () {
     }
     //Display data
     if (Game.time % 5 == 0) {
-        console.log('\n\n\n');
+        console.log('\n\n\n----------------------------------------------');
         //check cpu stored
         console.log(Game.cpu.bucket + "/5000 new pixel");
         //check energy and creeps
@@ -270,6 +270,7 @@ module.exports.loop = function () {
         //check teams
         console.log("Team 1 Harvesters: " + Hteam1.length + " Team 1 Builders : " + Bteam1.length);
         //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
+        console.log("----------------------------------------------")
     }
     Game.cpu.generatePixel()
 }

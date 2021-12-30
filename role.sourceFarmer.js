@@ -1,4 +1,5 @@
 var roleUpgrader = require("role.upgrader");
+var roleFiller = require("role.filler");
 var roleSourceFarmer = {
 
     /** @param {Creep} creep **/
@@ -7,6 +8,7 @@ var roleSourceFarmer = {
         if (!creep.memory.team) {
             creep.memory.team = 0;
         }
+
         if (creep.memory.emptying) {
             //creep is empty so switch modes
             if (creep.store.energy == 0) {
@@ -14,6 +16,15 @@ var roleSourceFarmer = {
                 creep.say('⛏️');
 
             } else {
+                var targets = creep.room.find(FIND_STRUCTURES).filter(
+                    structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
+                        structure.structureType) !== -1).filter(
+                            structure => structure.store.getFreeCapacity([RESOURCE_ENERGY]) > 0);
+
+                if (targets.length == 0) {
+                   // console.log("Out of storage")
+                    roleFiller.run(creep);
+                }
                 if (creep.memory.team === 0) {
                     //find containers and storage with storage open
                     var targets = creep.room.find(FIND_STRUCTURES).filter(
@@ -81,9 +92,9 @@ var roleSourceFarmer = {
                     //team 1
                 } else if (creep.memory.team == 1 && sources.length > 1) {
                     if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                        console.log(
+                        //console.log(
                             creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#FFFFFF' } })
-                        )
+                       // )
                     }
                 }
             }

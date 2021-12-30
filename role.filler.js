@@ -8,18 +8,16 @@ var roleFiller = {
 			creep.memory.storing = false;
 			creep.say('🔄 harvest');
 		}
-		if (!creep.memory.storing && creep.carry.energy == creep.carryCapacity) {
-			creep.memory.storing = true;
-			creep.say('⚡ storing');
-		}
+		
 		/* var targets = creep.room.find(FIND_STRUCTURES,{filter: (structure) => return (structure.structureType == STRUCTURE_STORAGE ||structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity() > 0});
 		 *///finding all storage containers not spawn with space left
 
 
 		if (creep.memory.storing) {
 			var targets = creep.room.find(FIND_STRUCTURES)
-				.filter(structure => [STRUCTURE_EXTENSION, STRUCTURE_SPAWN].indexOf(structure.structureType) !== -1)
-
+				.filter(structure => [STRUCTURE_EXTENSION, STRUCTURE_SPAWN].indexOf(
+					structure.structureType) !== -1)
+			//console.log(targets);
 			if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
 				//all extensions and spawn is full
 				//console.log("ALL STORAGE FULL");
@@ -44,9 +42,12 @@ var roleFiller = {
 					}
 				}
 			} else {
-				//console.log(1);
-				var targets = creep.room.find(FIND_STRUCTURES,
-					{ filter: (structure) => { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity; } });
+
+				/* var targets = creep.room.find(FIND_STRUCTURES,
+					{ filter: (structure) => { 
+						return (structure.structureType == STRUCTURE_EXTENSION 
+							|| structure.structureType == STRUCTURE_SPAWN) 
+							&& structure.energy < structure.energyCapacity; } }); */
 				if (targets.length < 1) {
 					roleUpgrader.run(creep);
 				} else {
@@ -56,6 +57,11 @@ var roleFiller = {
 				}
 			}
 		} else {
+			//switch modes
+			if (creep.carry.energy == creep.carryCapacity) {
+				creep.memory.storing = true;
+				creep.say('⚡ storing');
+			}
 			var sources = creep.room.find(FIND_STRUCTURES, {
 				filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
 							   i.store[RESOURCE_ENERGY] > 0});
