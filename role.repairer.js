@@ -18,14 +18,14 @@ var roleRepairer = {
 
 		if (creep.memory.repairing) {
 			var targets = creep.room.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
-			console.log("repair these " +targets);
+			//console.log("repair these " +targets);
 
 			if (targets.length < 1) {
 				creep.memory.upgrading = true;
 				roleUpgrader.run(creep);
 			} else {
-				targets.sort((a, b) => b.hits / b.hitsMax - a.hits / a.hitsMax);
-				// console.log(targets);
+				targets.sort((b, a) => b.hits / b.hitsMax - a.hits / a.hitsMax);
+				//console.log("sorted repair targets" +targets);
 				if (targets.length > 0) {
 					if (creep.memory.team == 2) {
 						const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });

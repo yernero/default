@@ -16,7 +16,7 @@ var roleFiller = {
 		if (creep.memory.storing) {
 			var targets = creep.room.find(FIND_STRUCTURES)
 				.filter(structure => [STRUCTURE_EXTENSION, STRUCTURE_SPAWN].indexOf(
-					structure.structureType) !== -1)
+					structure.structureType) !== -1).filter(i => i.store.getFreeCapacity > 10);
 			//console.log(targets);
 			if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
 				//all extensions and spawn is full
