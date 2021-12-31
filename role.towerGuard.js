@@ -8,7 +8,7 @@ var towerGuard = {
 				filter: (structure) => structure.structureType == "tower" &&
 					structure.store.getFreeCapacity([RESOURCE_ENERGY]) > 0
 			});
-		console.log("towers: " + towers);
+		//console.log("towers: " + towers);
 
 		//creep.memory.filling = false;
 		if (creep.memory.filling) {
