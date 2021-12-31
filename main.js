@@ -151,8 +151,8 @@ module.exports.loop = function () {
                 console.log('Spawning new Guard: ' + newName);
             }
             //Fillers
-        } else if (Game.creeps.length < 3) {
-            var containers = find(FIND_STRUCTURES, {
+        } else if (fillers.length <3 ) {
+            var containers = myroom.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
                     i.store[RESOURCE_ENERGY] > 0
             });
