@@ -125,7 +125,8 @@ module.exports.loop = function () {
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
     var sfTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "sourceFarmer")
     var sfTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "sourceFarmer")
-
+    var RTeam0 =_.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "repairer")
+    var RTeam1 =_.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
 
@@ -192,7 +193,7 @@ module.exports.loop = function () {
                 }
             }
             //Upgraders
-        } else if (upgraders.length < 7) {
+        } else if (upgraders.length <11) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -224,11 +225,19 @@ module.exports.loop = function () {
         } else if (repairers.length < 10) {
 
             var newName = 'handy' + Game.time;
+            if (RTeam1.length > 1) {
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
                 newName,
-                { memory: { role: 'repairer' } }) == 0) {
+                { memory: { role: 'repairer', team: 1} }) == 0) {
                 console.log('Spawning new handy: ' + newName);
             }
+        } else {
+            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
+                newName,
+                { memory: { role: 'repairer', team: 0 } }) == 0) {
+                console.log('Spawning new handy: ' + newName);
+            }
+        }
             //Settlers
         } else if (settlers.length < 0) {
 
@@ -276,10 +285,13 @@ module.exports.loop = function () {
             " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
             "\tFillers: " + fillers.length +
             '\tHarvesters: ' + harvesters.length +
+            " T0: " +Hteam1.length + " T1: " + Hteam1.length +
             "\tTower Guards: " + towerGuards.length +
             '\tUpgraders: ' + upgraders.length +
             '\tBuilders: ' + builders.length +
+            " T0: " + Bteam1.length + " T1: " + Bteam1.length +
             '\tRepairers: ' + repairers.length +
+            " T0: " + RTeam0.length + " T1: " + RTeam1.length +
             "\tSettlers: " + settlers.length +
             "\tImports: " + importers.length);
         //check teams

@@ -47,3 +47,6 @@ towerguard
 Upgrader
 
 //TODO
+
+
+//  creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});
