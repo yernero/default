@@ -101,7 +101,7 @@ module.exports.loop = function () {
     }
 
     //Look for enemies
-    var redTarget  = myroom.find( FIND_HOSTILE_CREEPS);
+    var redTarget = myroom.find(FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
         //use towers to attack enemies
         var towers = myroom.find(FIND_STRUCTURES, { filter: o => o.structureType === STRUCTURE_TOWER }); +
@@ -125,8 +125,8 @@ module.exports.loop = function () {
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
     var sfTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "sourceFarmer")
     var sfTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "sourceFarmer")
-    var RTeam0 =_.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "repairer")
-    var RTeam1 =_.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
+    var RTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "repairer")
+    var RTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
 
@@ -151,13 +151,26 @@ module.exports.loop = function () {
                 console.log('Spawning new Guard: ' + newName);
             }
             //Fillers
-        } else if (fillers.length < 3) {
+        } else if (Game.creeps.length < 3) {
+            var containers = find(FIND_STRUCTURES, {
+                filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
+                    i.store[RESOURCE_ENERGY] > 0
+            });
             var newName = 'Filler' + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
-                newName,
-                { memory: { role: 'filler', storing: false } }) == 0) {
-                console.log('Spawning new Filler: ' + newName);
+            if (containers.length < 1) {
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'filler', storing: false } }) == 0) {
+                    console.log('Spawning new Filler: ' + newName);
+                }
+            } else {
+                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
+                    newName,
+                    { memory: { role: 'filler', storing: false } }) == 0) {
+                    console.log('Spawning new Filler: ' + newName);
+                }
             }
+
         } else if (sourceFarmers.length < 6) {
             var newName = 'sourceFarmer' + Game.time;
             if (sfTeam0.length < 3) {
@@ -193,7 +206,7 @@ module.exports.loop = function () {
                 }
             }
             //Upgraders
-        } else if (upgraders.length <11) {
+        } else if (upgraders.length < 11) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -226,18 +239,18 @@ module.exports.loop = function () {
 
             var newName = 'handy' + Game.time;
             if (RTeam1.length > 1) {
-            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
-                newName,
-                { memory: { role: 'repairer', team: 1} }) == 0) {
-                console.log('Spawning new handy: ' + newName);
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
+                    newName,
+                    { memory: { role: 'repairer', team: 1 } }) == 0) {
+                    console.log('Spawning new handy: ' + newName);
+                }
+            } else {
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
+                    newName,
+                    { memory: { role: 'repairer', team: 0 } }) == 0) {
+                    console.log('Spawning new handy: ' + newName);
+                }
             }
-        } else {
-            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
-                newName,
-                { memory: { role: 'repairer', team: 0 } }) == 0) {
-                console.log('Spawning new handy: ' + newName);
-            }
-        }
             //Settlers
         } else if (settlers.length < 0) {
 
@@ -285,7 +298,7 @@ module.exports.loop = function () {
             " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
             "\tFillers: " + fillers.length +
             '\tHarvesters: ' + harvesters.length +
-            " T0: " +Hteam1.length + " T1: " + Hteam1.length +
+            " T0: " + Hteam1.length + " T1: " + Hteam1.length +
             "\tTower Guards: " + towerGuards.length +
             '\tUpgraders: ' + upgraders.length +
             '\tBuilders: ' + builders.length +
@@ -299,6 +312,6 @@ module.exports.loop = function () {
         //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
         console.log("----------------------------------------------")
     }
-    Game.cpu.generatePixel()
+    //Game.cpu.generatePixel()
 }
 //you can use room.pos.find to get an array of structures in the room, filter it by those that have hits less than hitsMax, use the lodash sortBy feature to sort them by hits ... then send your repairers or towers after the first element in that array
