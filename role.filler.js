@@ -15,9 +15,15 @@ var roleFiller = {
 
 		if (creep.memory.storing) {
 			var targets = creep.room.find(FIND_STRUCTURES)
-				.filter(structure => [STRUCTURE_EXTENSION, STRUCTURE_SPAWN].indexOf(
-					structure.structureType) !== -1).filter(i => i.store.getFreeCapacity > 10);
+				.filter(i => i.structureType == STRUCTURE_EXTENSION).filter(i => i.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
 			//console.log(targets);
+			if(targets.length < 1){
+				var targets = creep.room.find(FIND_STRUCTURES)
+				.filter(structure => [STRUCTURE_SPAWN].indexOf(
+					structure.structureType) !== -1);
+			}
+			//console.log(targets);
+
 			if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
 				//all extensions and spawn is full
 				//console.log("ALL STORAGE FULL");

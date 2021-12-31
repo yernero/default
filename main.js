@@ -101,7 +101,7 @@ module.exports.loop = function () {
     }
 
     //Look for enemies
-    var redTarget = 0;//myroom.find( FIND_HOSTILE_CREEPS);
+    var redTarget  = myroom.find( FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
         //use towers to attack enemies
         var towers = myroom.find(FIND_STRUCTURES, { filter: o => o.structureType === STRUCTURE_TOWER }); +
@@ -221,7 +221,7 @@ module.exports.loop = function () {
                 //team: 1
             }
             //Handys / Repairers
-        } else if (repairers.length < 3) {
+        } else if (repairers.length < 10) {
 
             var newName = 'handy' + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
