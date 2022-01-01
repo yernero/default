@@ -20,6 +20,11 @@ var roleBuilder = {
 					if (creep.memory.team == 1) {
 						//var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
 						if (targets.length > 1) {
+							//build containers first
+							var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
+							if(a.length >0){
+								targets = a;
+							}
 							if (creep.build(targets[targets.length - 1]) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#ffffff' } });
 							}

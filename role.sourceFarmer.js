@@ -1,5 +1,6 @@
 var roleUpgrader = require("role.upgrader");
 var roleFiller = require("role.filler");
+var roleBuilder = require("role.builder");
 var roleSourceFarmer = {
 
     /** @param {Creep} creep **/
@@ -23,7 +24,7 @@ var roleSourceFarmer = {
 
                 if (targets.length == 0) {
                    // console.log("Out of storage")
-                    roleFiller.run(creep);
+                    roleBuilder.run(creep);
                 }
                 if (creep.memory.team === 0) {
                     //find containers and storage with storage open
