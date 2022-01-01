@@ -12,7 +12,6 @@ var roleRepairer = {
 				creep.say('🔄');
 			} else {
 				var	targets = creep.room.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
-
 				
 				//console.log("repair these " +targets);
 

@@ -22,11 +22,17 @@ var roleBuilder = {
 						if (targets.length > 1) {
 							//build containers first
 							var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
-							if(a.length >0){
+							if (a.length > 0) {
 								targets = a;
 							}
-							if (creep.build(targets[targets.length - 1]) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#ffffff' } });
+							if(!creep.memory.dest){
+								creep.memory.dest = targets[targets.length-1].id;
+							}
+							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
+							var dest = Game.getObjectById(creep.memory.dest);
+							//console.log("dest: " + dest);
+							if (creep.build(dest) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
 							}
 						} else {
 							if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
@@ -34,8 +40,13 @@ var roleBuilder = {
 							}
 						}
 					} else {
-						if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
+						if(!creep.memory.dest){
+							creep.memory.dest = targets[0].id;
+						}
+						var dest = Game.getObjectById(creep.memory.dest);
+						//console.log("dest: " + dest);
+						if (creep.build(dest) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
 						}
 					}
 				}
