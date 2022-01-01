@@ -207,7 +207,7 @@ module.exports.loop = function () {
                 }
             }
             //Upgraders
-        } else if (upgraders.length < 8) {
+        } else if (upgraders.length < 5) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -220,7 +220,7 @@ module.exports.loop = function () {
 
             var newName = "Bob" + Game.time;
             //teams 1 and 2
-            if (Bteam1.length > 1) {
+            if (Bteam1.length > 3) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, WORK, MOVE],
                     newName,
                     { memory: { role: 'builder', building: false, team: 2 } }) == 0) {
@@ -239,7 +239,7 @@ module.exports.loop = function () {
         } else if (repairers.length < 10) {
 
             var newName = 'handy' + Game.time;
-            if (RTeam1.length > 1) {
+            if (RTeam1.length < 3) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
                     newName,
                     { memory: { role: 'repairer', team: 1 } }) == 0) {

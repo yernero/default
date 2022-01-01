@@ -25,6 +25,12 @@ var roleRepairer = {
 					//console.log("sorted repair targets" +targets);
 					if (targets.length > 0) {
 						if (creep.memory.team == 1) {
+							//repair containers first
+							var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
+							if(a.length >0){
+								targets = a;
+							}
+							//console.log("Containers: " +targets);
 							if(!creep.memory.dest){
 								creep.memory.dest = targets[targets.length-1].id;
 							}
