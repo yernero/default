@@ -207,7 +207,7 @@ module.exports.loop = function () {
                 }
             }
             //Upgraders
-        } else if (upgraders.length < 11) {
+        } else if (upgraders.length < 8) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -216,7 +216,7 @@ module.exports.loop = function () {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
-        } else if (builders.length < 3) {
+        } else if (builders.length < 8) {
 
             var newName = "Bob" + Game.time;
             //teams 1 and 2
