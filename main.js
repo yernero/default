@@ -172,9 +172,9 @@ module.exports.loop = function () {
                 }
             }
 
-        } else if (sourceFarmers.length < 6) {
+        } else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
-            if (sfTeam0.length < 3) {
+            if (sfTeam0.length < 4) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 0 } }) == 0) {
@@ -182,7 +182,7 @@ module.exports.loop = function () {
 
                 }
 
-            } else if (sfTeam1.length < 4) {
+            } else if (sfTeam1.length < 3) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'sourceFarmer', emptying: false, team: 1 } }) == 0) {
@@ -190,7 +190,7 @@ module.exports.loop = function () {
                 }
             }
             //Harvesters
-        } else if (harvesters.length < 2) {
+        } else if (harvesters.length < 4) {
             var newName = 'Harvester' + Game.time;
             //create teams 0 and 1
             if (Hteam1.length < 0) {
@@ -200,7 +200,7 @@ module.exports.loop = function () {
                     console.log('Spawning new harvester: ' + newName);
                 }
             } else {
-                if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
                     newName,
                     { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
                     console.log('Spawning new harvester: ' + newName);
