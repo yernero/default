@@ -7,6 +7,7 @@ var roleBuilder = {
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
 		//console.log(targets);
 		if (targets.length < 1) {
+			//console.log("repair");
 			//There are no construction sites
 			//if(creep.carry.energy <creep.carryCapacity && !creep.memory.building){
 			roleRepairer.run(creep);
@@ -22,6 +23,7 @@ var roleBuilder = {
 						if (targets.length > 1) {
 							//build containers first
 							var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
+							//console.log(a)
 							if (a.length > 0) {
 								targets = a;
 							}
@@ -30,6 +32,11 @@ var roleBuilder = {
 							}
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
+							//if already built
+							if(!dest){
+								creep.memory.dest = targets[targets.length-1].id;
+								dest = targets[targets.length-1];
+							}
 							//console.log("dest: " + dest);
 							if (creep.build(dest) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
@@ -44,6 +51,11 @@ var roleBuilder = {
 							creep.memory.dest = targets[0].id;
 						}
 						var dest = Game.getObjectById(creep.memory.dest);
+						//already built
+						if(!dest){
+							creep.memory.dest = targets[targets.length-1].id;
+							dest = targets[targets.length-1];
+						}
 						//console.log("dest: " + dest);
 						if (creep.build(dest) == ERR_NOT_IN_RANGE) {
 							creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });

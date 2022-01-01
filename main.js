@@ -228,14 +228,14 @@ module.exports.loop = function () {
         } else if (builders.length < 8) {
 
             var newName = "Bob" + Game.time;
-            //teams 1 and 2
+            //team 0
             if (Bteam1.length > 3) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, WORK, MOVE],
                     newName,
-                    { memory: { role: 'builder', building: false, team: 2 } }) == 0) {
+                    { memory: { role: 'builder', building: false, team: 0 } }) == 0) {
                     console.log("Spawning new bob the builder: " + newName);
                 }
-                //team: 2
+                //team 1
             } else {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                     newName,

@@ -30,11 +30,17 @@ var roleRepairer = {
 								targets = a;
 							}
 							//console.log("Containers: " +targets);
+							//check if dest is set
 							if(!creep.memory.dest){
 								creep.memory.dest = targets[targets.length-1].id;
 							}
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
+							//console.log("dest: " + dest.hits + " / " + dest.hitsMax);
+							if(dest.hits == dest.hitsMax){
+								creep.memory.dest = targets[targets.length-1].id;
+								dest = targets[targets.length-1];
+							}
 							//console.log("dest: " + dest);
 							if (creep.repair(dest) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
@@ -46,6 +52,11 @@ var roleRepairer = {
 								creep.memory.dest = targets[0].id;
 							}
 							var dest = Game.getObjectById(creep.memory.dest);
+							//console.log(dest);
+							if(dest.hits == dest.hitsMax){
+								creep.memory.dest = targets[0].id;
+								dest = targets[0];
+							}
 							//console.log("dest: " + dest);
 							if (creep.repair(dest) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
