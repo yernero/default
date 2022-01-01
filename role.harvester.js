@@ -8,8 +8,8 @@ var roleHarvester = {
         creep.memory.storing = false;
         creep.say('🔄');
       } else {
-        var targets = creep.room.find(FIND_STRUCTURES).filter(structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity());
-        //console.log("test");
+        var targets = creep.room.find(FIND_STRUCTURES).filter(structure => [ STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity());
+        //console.log("test" +targets);
         if (targets.length < 1) {
           targets = creep.room.find(FIND_STRUCTURES).filter(structure => [STRUCTURE_SPAWN, STRUCTURE_EXTENSION].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity(RESOURCE_ENERGY));
           //console.log(targets);
@@ -45,7 +45,7 @@ var roleHarvester = {
         creep.memory.storing = true;
         creep.say('⚡');
       } else {
-        var sources = creep.room.find(FIND_SOURCES);
+        var sources;// = creep.room.find(FIND_SOURCES);
         //.log("Sources in " + creep.room + " " + sources)
 
         //team 1
@@ -56,8 +56,8 @@ var roleHarvester = {
           //team 0
         } else {
           //console.log(creep.harvest(sources[0]))
-
-          if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
+//creep.harvest(sources[1]) === ERR_NOT_IN_RANGE
+          if (sources) {
             creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#FFC0CB' } });
           } else {
             var targets = creep.room.find(FIND_STRUCTURES, {
