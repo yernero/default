@@ -313,6 +313,6 @@ module.exports.loop = function () {
         //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
         console.log("----------------------------------------------")
     }
-    //Game.cpu.generatePixel()
+    Game.cpu.generatePixel();
 }
 //you can use room.pos.find to get an array of structures in the room, filter it by those that have hits less than hitsMax, use the lodash sortBy feature to sort them by hits ... then send your repairers or towers after the first element in that array

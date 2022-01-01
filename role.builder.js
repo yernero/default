@@ -3,40 +3,38 @@ var roleBuilder = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
-		//change modes
-		if (creep.memory.building && creep.carry.energy == 0) {
-			//Go Harvest
-			creep.memory.building = false;
-			creep.say('🔄 harvest');
-		}
-
 		//creep.memory.building =false;
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-
 		//console.log(targets);
 		if (targets.length < 1) {
 			//There are no construction sites
 			//if(creep.carry.energy <creep.carryCapacity && !creep.memory.building){
 			roleRepairer.run(creep);
-
 		} else {
 			if (creep.memory.building) {
-				if (creep.memory.team == 1) {
-					//var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-					if (targets.length > 1) {
-						if (creep.build(targets[targets.length - 1]) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#ffffff' } });
+				if (creep.carry.energy == 0) {
+					//Go Harvest
+					creep.memory.building = false;
+					creep.say('⚡');
+				} else {
+					if (creep.memory.team == 1) {
+						//var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+						if (targets.length > 1) {
+							if (creep.build(targets[targets.length - 1]) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(targets[targets.length - 1], { visualizePathStyle: { stroke: '#ffffff' } });
+							}
+						} else {
+							if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
+							}
 						}
 					} else {
 						if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
 							creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
 						}
 					}
-				} else {
-					if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-						creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-					}
 				}
+
 				// creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});
 			} else {
 				//make sure memory created
@@ -44,7 +42,7 @@ var roleBuilder = {
 				//changing status
 				if (creep.store.getFreeCapacity() == 0) {
 					creep.memory.building = true;
-					creep.say('🚧 build');
+					creep.say('🚧');
 				} else {
 					//check for loose energy
 					var droppedres = creep.room.find(FIND_DROPPED_RESOURCES, {
@@ -72,39 +70,39 @@ var roleBuilder = {
 
 						//No droppres energy
 					} else {
-							//find structures with energy
-					var targets = creep.room.find(FIND_STRUCTURES,
-						{
-							filter: (i) => (i.structureType == STRUCTURE_CONTAINER ||
-								i.structureType == STRUCTURE_STORAGE)
-								&& i.store[RESOURCE_ENERGY] > 50
-						});
-					//console.log("containers with more than 50 energy" +targets);
+						//find structures with energy
+						var targets = creep.room.find(FIND_STRUCTURES,
+							{
+								filter: (i) => (i.structureType == STRUCTURE_CONTAINER ||
+									i.structureType == STRUCTURE_STORAGE)
+									&& i.store[RESOURCE_ENERGY] > 50
+							});
+						//console.log("containers with more than 50 energy" +targets);
 
-					//sort by largest to smallest
-					targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
-					//console.log("Sorted targs" + targets);
-					//console.log(targets[0])
+						//sort by largest to smallest
+						targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+						//console.log("Sorted targs" + targets);
+						//console.log(targets[0])
 
-					//console.log(creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' }}))
+						//console.log(creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' }}))
 
-					//if more than 1 structure with energy, go to first one
-					if (targets.length > 1) {
-						if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+						//if more than 1 structure with energy, go to first one
+						if (targets.length > 1) {
+							if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+							}
+							//if just 1 structure with energy, go to first one
+						} else if (targets.length == 1) {
+							if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+							}
+							//if no structure with energy, go to a source
+						} else {
+							var sources = creep.room.find(FIND_SOURCES);
+							if (creep.harvest(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+							}
 						}
-						//if just 1 structure with energy, go to first one
-					} else if (targets.length == 1) {
-						if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-						}
-						//if no structure with energy, go to a source
-					} else {
-						var sources = creep.room.find(FIND_SOURCES);
-						if (creep.harvest(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-						}
-					}
 					}
 				}
 
