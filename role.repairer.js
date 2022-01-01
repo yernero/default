@@ -69,7 +69,9 @@ var roleRepairer = {
 						i.structureType == STRUCTURE_STORAGE) &&
 						i.store[RESOURCE_ENERGY] > 0
 				});
-				//console.log("Containers and storage in room " + creep.room.name + ": " +sources);
+				sources = sources.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+			
+				console.log("Containers and storage in room " + creep.room.name + ": " +sources);
 
 				if (creep.withdraw(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#000000' } });
