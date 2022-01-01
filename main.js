@@ -130,7 +130,10 @@ module.exports.loop = function () {
     var RTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
-
+    var containers = myroom.find(FIND_STRUCTURES, {
+        filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
+            i.store[RESOURCE_ENERGY] > 0
+    });
     //check ability to create new screep
     if (myroom.energyAvailable > 200) {
         //see if room has towers
@@ -153,10 +156,7 @@ module.exports.loop = function () {
             }
             //Fillers
         } else if (fillers.length <3 ) {
-            var containers = myroom.find(FIND_STRUCTURES, {
-                filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
-                    i.store[RESOURCE_ENERGY] > 0
-            });
+            
             var newName = 'Filler' + Game.time;
             if (containers.length < 1) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
@@ -193,18 +193,27 @@ module.exports.loop = function () {
         } else if (harvesters.length < 4) {
             var newName = 'Harvester' + Game.time;
             //create teams 0 and 1
-            if (Hteam1.length < 0) {
+            if (Hteam1.length < 0 ) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'harvester', storing: false, team: 1 } }) == 0) {
                     console.log('Spawning new harvester: ' + newName);
                 }
             } else {
-                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
-                    newName,
-                    { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
-                    console.log('Spawning new harvester: ' + newName);
+                if(containers > 1){
+                    if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
+                        newName,
+                        { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
+                        console.log('Spawning new harvester: ' + newName);
+                    }
+                }else{
+                    if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
+                        newName,
+                        { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
+                        console.log('Spawning new harvester: ' + newName);
+                    }
                 }
+                
             }
             //Upgraders
         } else if (upgraders.length < 5) {
