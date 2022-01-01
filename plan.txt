@@ -23,6 +23,10 @@ TODO
 
 TODO
 	Create different path colors for each role
+
+Source Farmer
+	create building method to create containers before defaulting to storage.
+	
 Builder
 
 //TODO
@@ -36,7 +40,10 @@ harvester
 //TODO
 
 repairer
-
+let target = _.min(targets, function(e) {
+    return( creep.pos.getRangeTo(e) + 
+        (e.hits>3000?100:0) + (e.hits>12500?200:0) + (e.hits>25000?300:0));
+});
 //TODO
 	create a road team
 

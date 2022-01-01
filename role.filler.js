@@ -4,16 +4,17 @@ var roleFiller = {
 	/** @param {Creep} creep **/
 	run: function (creep) {
 
-		if (creep.memory.storing && creep.carry.energy == 0) {
-			creep.memory.storing = false;
-			creep.say('🔄 collecting');
-		}
+		
 
 		/* var targets = creep.room.find(FIND_STRUCTURES,{filter: (structure) => return (structure.structureType == STRUCTURE_STORAGE ||structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity() > 0});
 		 *///finding all storage containers not spawn with space left
 
 
 		if (creep.memory.storing) {
+			if (creep.carry.energy == 0) {
+				creep.memory.storing = false;
+				creep.say('🔄 collecting');
+			}
 			var targets = creep.room.find(FIND_STRUCTURES)
 				.filter(i => i.structureType == STRUCTURE_EXTENSION).filter(i => i.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
 			//console.log(targets);

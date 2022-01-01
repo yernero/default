@@ -8,29 +8,42 @@ var roleRepairer = {
 		if (creep.memory.repairing) {
 			if (creep.carry.energy == 0) {
 				creep.memory.repairing = false;
+				creep.memory.dest = false;
 				creep.say('🔄');
 			} else {
-				var targets = creep.room.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
+				var	targets = creep.room.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
+
+				
 				//console.log("repair these " +targets);
 
 				if (targets.length < 1) {
 					creep.memory.upgrading = true;
 					roleUpgrader.run(creep);
+				
 				} else {
 					targets.sort((b, a) => b.hits / b.hitsMax - a.hits / a.hitsMax);
 					//console.log("sorted repair targets" +targets);
 					if (targets.length > 0) {
 						if (creep.memory.team == 1) {
-							const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
-
-							if (creep.repair(targets[1]) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[1], { visualizePathStyle: { stroke: '#000000' } });
+							if(!creep.memory.dest){
+								creep.memory.dest = targets[targets.length-1].id;
+							}
+							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
+							var dest = Game.getObjectById(creep.memory.dest);
+							//console.log("dest: " + dest);
+							if (creep.repair(dest) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
 							}
 
 
 						} else {
-							if (creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#000000' } });
+							if(!creep.memory.dest){
+								creep.memory.dest = targets[0].id;
+							}
+							var dest = Game.getObjectById(creep.memory.dest);
+							//console.log("dest: " + dest);
+							if (creep.repair(dest) == ERR_NOT_IN_RANGE) {
+								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
 							}
 						}
 					}
@@ -40,7 +53,7 @@ var roleRepairer = {
 			//making sure repairing exists
 			creep.memory.repairing = false;
 			//check if time to switch modes
-			if (!creep.carry.energy == creep.carryCapacity) {
+			if (creep.store[RESOURCE_ENERGY] == creep.store.getCapacity()) {
 				creep.memory.repairing = true;
 				creep.say('🚧 repair');
 			} else {

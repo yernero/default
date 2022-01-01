@@ -71,6 +71,7 @@ module.exports.loop = function () {
                 roleUpgrader.run(creep);
                 break;
             case "repairer":
+                //creep.memory.dest = false;
                 roleRepairer.run(creep);
                 break;
             case "filler":
@@ -211,7 +212,7 @@ module.exports.loop = function () {
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                 newName,
-                { memory: { role: 'upgrader', upgrading: false } }) == 0) {
+                { memory: { role: 'upgrader', upgrading: false,team: 0 } }) == 0) {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
