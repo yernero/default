@@ -12,6 +12,10 @@ var roleBuilder = {
 			//if(creep.carry.energy <creep.carryCapacity && !creep.memory.building){
 			roleRepairer.run(creep);
 		} else {
+			creep.memory.repairing = false;
+			if (!(Game.getObjectById(creep.memory.dest) && Game.getObjectById(creep.memory.dest)._my)) {
+				creep.memory.dest = 0;
+			}
 			if (creep.memory.building) {
 				if (creep.carry.energy == 0) {
 					//Go Harvest
@@ -27,15 +31,15 @@ var roleBuilder = {
 							if (a.length > 0) {
 								targets = a;
 							}
-							if(!creep.memory.dest){
-								creep.memory.dest = targets[targets.length-1].id;
+							if (!creep.memory.dest) {
+								creep.memory.dest = targets[targets.length - 1].id;
 							}
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
 							//if already built
-							if(!dest){
-								creep.memory.dest = targets[targets.length-1].id;
-								dest = targets[targets.length-1];
+							if (!dest) {
+								creep.memory.dest = targets[targets.length - 1].id;
+								dest = targets[targets.length - 1];
 							}
 							//console.log("dest: " + dest);
 							if (creep.build(dest) == ERR_NOT_IN_RANGE) {
@@ -47,14 +51,14 @@ var roleBuilder = {
 							}
 						}
 					} else {
-						if(!creep.memory.dest){
+						if (!creep.memory.dest) {
 							creep.memory.dest = targets[0].id;
 						}
 						var dest = Game.getObjectById(creep.memory.dest);
 						//already built
-						if(!dest){
-							creep.memory.dest = targets[targets.length-1].id;
-							dest = targets[targets.length-1];
+						if (!dest) {
+							creep.memory.dest = targets[targets.length - 1].id;
+							dest = targets[targets.length - 1];
 						}
 						//console.log("dest: " + dest);
 						if (creep.build(dest) == ERR_NOT_IN_RANGE) {

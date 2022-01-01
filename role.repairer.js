@@ -37,7 +37,7 @@ var roleRepairer = {
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
 							//console.log("dest: " + dest.hits + " / " + dest.hitsMax);
-							if(dest.hits == dest.hitsMax){
+							if(!dest || dest.hits == dest.hitsMax){
 								creep.memory.dest = targets[targets.length-1].id;
 								dest = targets[targets.length-1];
 							}
@@ -53,7 +53,7 @@ var roleRepairer = {
 							}
 							var dest = Game.getObjectById(creep.memory.dest);
 							//console.log(dest);
-							if(dest.hits == dest.hitsMax){
+							if(!dest ||dest.hits == dest.hitsMax){
 								creep.memory.dest = targets[0].id;
 								dest = targets[0];
 							}
