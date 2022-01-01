@@ -30,7 +30,7 @@ var roleUpgrader = {
 				//check for loose energy
 				var droppedres = creep.room.find(FIND_DROPPED_RESOURCES, {
 					filter: x => x.resourceType == RESOURCE_ENERGY
-						&& x.amount > 1000
+						&& x.amount > 100
 				});
 				//console.log("Dropped Energy: " + droppedres); //prints list
 				//console.log("Dropped Energy: " + droppedres[0].pos); //prints location of first
