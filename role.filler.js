@@ -15,8 +15,7 @@ var roleFiller = {
 				//console.log(targets);
 				if (targets.length < 1) {
 					var targets = creep.room.find(FIND_STRUCTURES)
-						.filter(structure => [STRUCTURE_SPAWN].indexOf(
-							structure.structureType) !== -1);
+						.filter(structure => i.structureType == STRUCTURE_SPAWN);
 				}
 				//console.log(targets);
 
