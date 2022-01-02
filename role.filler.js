@@ -33,11 +33,11 @@ var roleFiller = {
 					} else {
 
 						if (creep.memory.team == 1) {
-							if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+							if (creep.repair(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
 							}
 						} else {
-							if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+							if (creep.repair(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
 							}
 						}
