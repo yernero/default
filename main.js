@@ -155,7 +155,7 @@ module.exports.loop = function () {
                 console.log('Spawning new Guard: ' + newName);
             }
             //Fillers
-        } else if (fillers.length <3 ) {
+        } else if (fillers.length <5 ) {
             
             var newName = 'Filler' + Game.time;
             if (containers.length < 1) {
@@ -190,7 +190,7 @@ module.exports.loop = function () {
                 }
             }
             //Harvesters
-        } else if (harvesters.length < 4) {
+        } else if (harvesters.length < 10) {
             var newName = 'Harvester' + Game.time;
             //create teams 0 and 1
             if (Hteam1.length < 0 ) {
