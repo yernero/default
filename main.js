@@ -164,7 +164,7 @@ module.exports.loop = function () {
                 console.log('Spawning new Guard: ' + newName);
             }
             //Fillers
-        } else if (fillers.length <5 ) {
+        } else if (fillers.length <3 ) {
             
             var newName = 'Filler' + Game.time;
             if (containers.length < 1) {
