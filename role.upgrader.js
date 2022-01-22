@@ -2,6 +2,12 @@ var roleUpgrader = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
+		//check if links exist
+		var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
+		if(links.length > 1){
+			//if less than 2 links in a room, become a regular upgrader
+			creep.memory.role = "linkUpgrader";
+		}
 		//Upgrading Controller
 		if (creep.memory.upgrading) {
 			//changing status
