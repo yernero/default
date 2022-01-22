@@ -121,6 +121,7 @@ module.exports.loop = function () {
 
     //Roles
     var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
+    var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkfiller");
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => (creep.memory.role == 'upgrader' || creep.memory.role == 'linkUpgrader'));
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');

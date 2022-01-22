@@ -38,7 +38,7 @@ var roleUpgrader = {
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
 				//remove energy
-				console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
+				//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
 				var ret = creep.withdraw(links[0],RESOURCE_ENERGY)
 				if(ret  == ERR_NOT_IN_RANGE){
 					creep.moveTo(links[0])
@@ -50,7 +50,7 @@ var roleUpgrader = {
 					links.sort((a,b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
 					//transfer from link with energy to link without
 					links[0].transferEnergy(upgradeLink);
-					console.log(links);
+					//console.log(links);
 				}
 			
 
