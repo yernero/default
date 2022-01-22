@@ -185,7 +185,7 @@ module.exports.loop = function () {
             
             var newName = 'Filler' + Game.time;
            
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
