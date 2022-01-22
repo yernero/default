@@ -9,7 +9,8 @@ var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
 var roleSourceFarmer = require("role.sourceFarmer");
-
+var roleLinkUpgrader = require("role.linkUpgrader");
+var roleLinkFiller = require("role.linkFiller");
 
 module.exports.loop = function () {
 
@@ -92,6 +93,12 @@ module.exports.loop = function () {
             case "sourceFarmer":
                 roleSourceFarmer.run(creep);
                 break;
+            case "linkUpgrader":
+                roleLinkUpgrader.run(creep);
+                break;
+            case "linkFiller":
+                roleLinkFiller.run(creep);
+                break;
             default:
                 creep.memory.role = "sourceFarmer";
                 creep.memory.team = 0;
@@ -110,11 +117,12 @@ module.exports.loop = function () {
                 Game.getObjectById(tower.id).attack(redTarget[0]);
             });
     }
+    
 
     //Roles
     var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' || creep.memory.role == 'upgradeLinker');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
     var settlers = _.filter(Game.creeps, (creep) => creep.memory.role == "settler");
@@ -221,7 +229,7 @@ module.exports.loop = function () {
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                 newName,
-                { memory: { role: 'upgrader', upgrading: false,team: 0 } }) == 0) {
+                { memory: { role: 'linkUpgrader', upgrading: false,team: 0 } }) == 0) {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
