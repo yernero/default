@@ -181,7 +181,17 @@ module.exports.loop = function () {
                 }
             }
 
-        } else if (sourceFarmers.length < 7) {
+        }  else if (linkFillers.length <1 ) {
+            
+            var newName = 'Filler' + Game.time;
+           
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'linkFiller', storing: false } }) == 0) {
+                    console.log('Spawning new Link Filler: ' + newName);
+                }
+
+        }else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
             if (sfTeam0.length < 4) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
