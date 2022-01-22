@@ -121,7 +121,7 @@ module.exports.loop = function () {
 
     //Roles
     var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
-    var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkfiller");
+    var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkFiller");
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => (creep.memory.role == 'upgrader' || creep.memory.role == 'linkUpgrader'));
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
@@ -225,7 +225,7 @@ module.exports.loop = function () {
                 
             }
             //Upgraders
-        } else if (upgraders.length < 5) {
+        } else if (upgraders.length < 7) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -292,16 +292,7 @@ module.exports.loop = function () {
 
             }
 
-        } else if (upgraders.length < 8) {
-
-            var newName = "uppity" + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                newName,
-                { memory: { role: 'upgrader', upgrading: false,team: 0 } }) == 0) {
-                console.log("Spawning new uppity: " + newName);
-            }
-            
-        } 
+        }
     }
 
     //display when a new screep is spawning
@@ -325,11 +316,12 @@ module.exports.loop = function () {
         console.log("Source Farmers: " + sourceFarmers.length +
             " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
             "\tFillers: " + fillers.length +
+            "\tLink Fillers: " + linkFillers.length +
             '\tHarvesters: ' + harvesters.length +
             " T0: " + Hteam1.length + " T1: " + Hteam1.length +
             "\tTower Guards: " + towerGuards.length +
-            '\tUpgraders: ' + upgraders.length +
-            '\tBuilders: ' + builders.length +
+            '\tUpgraders: ' + upgraders.length +"\n" +
+            '\Builders: ' + builders.length +
             " T0: " + Bteam1.length + " T1: " + Bteam1.length +
             '\tRepairers: ' + repairers.length +
             " T0: " + RTeam0.length + " T1: " + RTeam1.length +
