@@ -283,7 +283,16 @@ module.exports.loop = function () {
 
             }
 
-        }
+        } else if (upgraders.length < 8) {
+
+            var newName = "uppity" + Game.time;
+            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
+                newName,
+                { memory: { role: 'upgrader', upgrading: false,team: 0 } }) == 0) {
+                console.log("Spawning new uppity: " + newName);
+            }
+            
+        } 
     }
 
     //display when a new screep is spawning
