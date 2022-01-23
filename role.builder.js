@@ -51,6 +51,8 @@ var roleBuilder = {
 							}
 						}
 					} else {
+						//console.log(targets);
+							
 						if (!creep.memory.dest) {
 							creep.memory.dest = targets[0].id;
 						}
@@ -58,7 +60,7 @@ var roleBuilder = {
 						//already built
 						if (!dest) {
 							creep.memory.dest = targets[targets.length - 1].id;
-							dest = targets[targets.length - 1];
+							dest = targets[0];
 						}
 						//console.log("dest: " + dest);
 						if (creep.build(dest) == ERR_NOT_IN_RANGE) {
@@ -74,6 +76,7 @@ var roleBuilder = {
 				//changing status
 				if (creep.store.getFreeCapacity() == 0) {
 					creep.memory.building = true;
+					creep.memory.dest = false;
 					creep.say('🚧');
 				} else {
 					//check for loose energy

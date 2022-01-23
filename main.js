@@ -117,8 +117,16 @@ module.exports.loop = function () {
                 Game.getObjectById(tower.id).attack(redTarget[0]);
             });
     }
-    
 
+    //find things to be repaired
+    var targets = myroom.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
+    //sorted least hits/hitsmax to most
+    targets.sort((a, b) => a.hits / a.hitsMax - b.hits / b.hitsMax);
+    //find just containers that need to be repaired
+    var containers = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
+    //console.log(targets);
+    Memory.toBeRepaired = targets;
+    Memory.toBeRepairedContainers = containers;
     //Roles
     var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
     var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkFiller");
@@ -164,8 +172,8 @@ module.exports.loop = function () {
                 console.log('Spawning new Guard: ' + newName);
             }
             //Fillers
-        } else if (fillers.length <3 ) {
-            
+        } else if (fillers.length < 3) {
+
             var newName = 'Filler' + Game.time;
             if (containers.length < 1) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
@@ -181,17 +189,17 @@ module.exports.loop = function () {
                 }
             }
 
-        }  else if (linkFillers.length <1 ) {
-            
-            var newName = 'Filler' + Game.time;
-           
-                if (Game.spawns['HELL'].spawnCreep([CARRY,CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'linkFiller', storing: false } }) == 0) {
-                    console.log('Spawning new Link Filler: ' + newName);
-                }
+        } else if (linkFillers.length < 1) {
 
-        }else if (sourceFarmers.length < 7) {
+            var newName = 'Filler' + Game.time;
+
+            if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
+                newName,
+                { memory: { role: 'linkFiller', storing: false } }) == 0) {
+                console.log('Spawning new Link Filler: ' + newName);
+            }
+
+        } else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
             if (sfTeam0.length < 4) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
@@ -209,30 +217,30 @@ module.exports.loop = function () {
                 }
             }
             //Harvesters
-        } else if (harvesters.length < 10) {
+        } else if (harvesters.length < 3) {
             var newName = 'Harvester' + Game.time;
             //create teams 0 and 1
-            if (Hteam1.length < 0 ) {
+            if (Hteam1.length < 0) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
                     newName,
                     { memory: { role: 'harvester', storing: false, team: 1 } }) == 0) {
                     console.log('Spawning new harvester: ' + newName);
                 }
             } else {
-                if(containers.length > 1){
+                if (containers.length > 1) {
                     if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
                         newName,
                         { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
                         console.log('Spawning new harvester: ' + newName);
                     }
-                }else{
+                } else {
                     if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
                         newName,
                         { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
                         console.log('Spawning new harvester: ' + newName);
                     }
                 }
-                
+
             }
             //Upgraders
         } else if (upgraders.length < 7) {
@@ -240,7 +248,7 @@ module.exports.loop = function () {
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                 newName,
-                { memory: { role: 'linkUpgrader', upgrading: false,team: 0 } }) == 0) {
+                { memory: { role: 'linkUpgrader', upgrading: false, team: 0 } }) == 0) {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
@@ -330,7 +338,7 @@ module.exports.loop = function () {
             '\tHarvesters: ' + harvesters.length +
             " T0: " + Hteam1.length + " T1: " + Hteam1.length +
             "\tTower Guards: " + towerGuards.length +
-            '\tUpgraders: ' + upgraders.length +"\n" +
+            '\tUpgraders: ' + upgraders.length + "\n" +
             '\Builders: ' + builders.length +
             " T0: " + Bteam1.length + " T1: " + Bteam1.length +
             '\tRepairers: ' + repairers.length +
