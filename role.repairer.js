@@ -75,7 +75,7 @@ var roleRepairer = {
 					if (creep.repair(dest) == ERR_NOT_IN_RANGE) {
 						creep.moveTo(dest ,{
 							visualizePathStyle: {
-								fill: 'solid',
+								fill: 'transparent',
 								stroke: '#fff',
 								lineStyle: 'dashed',
 								strokeWidth: .15,
