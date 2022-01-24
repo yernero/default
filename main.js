@@ -272,15 +272,24 @@ module.exports.loop = function () {
                 //team: 1
             }
             //Handys / Repairers
-        } else if (repairers.length < 10) {
+        } else if (repairers.length < 15) {
 
             var newName = 'handy' + Game.time;
             if (RTeam1.length < 3) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
-                    newName,
-                    { memory: { role: 'repairer', team: 1 } }) == 0) {
-                    console.log('Spawning new handy: ' + newName);
+                if (myroom.energyAvailable > 400) {
+                    if (Game.spawns['HELL'].spawnCreep([WORK,WORK, CARRY, CARRY, MOVE,],
+                        newName,
+                        { memory: { role: 'repairer', team: 1 } }) == 0) {
+                        console.log('Spawning new handy: ' + newName);
+                    }
+                } else {
+                    if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
+                        newName,
+                        { memory: { role: 'repairer', team: 1 } }) == 0) {
+                        console.log('Spawning new handy: ' + newName);
+                    }
                 }
+
             } else {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
                     newName,
