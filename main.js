@@ -189,7 +189,7 @@ module.exports.loop = function () {
                 }
             }
 
-        } else if (linkFillers.length < 1) {
+        } else if (linkFillers.length < 2) {
 
             var newName = 'Filler' + Game.time;
 

@@ -13,7 +13,9 @@ var roleFiller = {
 				creep.say('⚡');
 			} else {
 					//find all links
-					var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
+					var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_LINK) && i.store.getFreeCapacity(RESOURCE_ENERGY) > 100})
+					//show links
+					console.log("Links" + links);
 					//sort by closest
 					links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
 					//remove energy
