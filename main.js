@@ -261,7 +261,7 @@ module.exports.loop = function () {
             var newName = "miner" + Game.time;
             if(Game.spawns['HELL'].spawnCreep([WORK,WORK,CARRY,MOVE],
                 newName,
-                { memory: { role: 'linkUpgrader', upgrading: false, team: 0 } }) == 0){
+                { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0){
                     console.log("Spawning new miner: "  + newName);
                 }
         } else if (builders.length < 8) {
