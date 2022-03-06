@@ -11,6 +11,7 @@ var roleDefender = require("role.scavenger");
 var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
+var roleMiner  = require("role.miner");
 
 module.exports.loop = function () {
 
@@ -99,6 +100,9 @@ module.exports.loop = function () {
             case "linkFiller":
                 roleLinkFiller.run(creep);
                 break;
+            case "miner":
+                roleMiner.run(creep);
+                break;
             default:
                 creep.memory.role = "sourceFarmer";
                 creep.memory.team = 0;
@@ -138,6 +142,7 @@ module.exports.loop = function () {
     var importers = _.filter(Game.creeps, (creep) => creep.memory.role == "importer");
     var towerGuards = _.filter(Game.creeps, (creep) => creep.memory.role == "towerGuard");
     var sourceFarmers = _.filter(Game.creeps, (creep) => creep.memory.role == "sourceFarmer");
+    var miners = _.filter(Game.creeps, (creep) => creep.memory.role == "miner");
     //Teams
     var Hteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "harvester");
     var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
@@ -199,7 +204,7 @@ module.exports.loop = function () {
                 console.log('Spawning new Link Filler: ' + newName);
             }
 
-        } else if (sourceFarmers.length < 7) {
+        } else if (sourceFarmers.length < 6) {
             var newName = 'sourceFarmer' + Game.time;
             if (sfTeam0.length < 4) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
@@ -217,7 +222,7 @@ module.exports.loop = function () {
                 }
             }
             //Harvesters
-        } else if (harvesters.length < 3) {
+        } else if (harvesters.length < 1) {
             var newName = 'Harvester' + Game.time;
             //create teams 0 and 1
             if (Hteam1.length < 0) {
@@ -243,7 +248,7 @@ module.exports.loop = function () {
 
             }
             //Upgraders
-        } else if (upgraders.length < 7) {
+        } else if (upgraders.length < 6) {
 
             var newName = "uppity" + Game.time;
             if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
@@ -252,6 +257,13 @@ module.exports.loop = function () {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
+        }else if(miners.length < 1){
+            var newName = "miner" + Game.time;
+            if(Game.spawns['HELL'].spawnCreep([WORK,WORK,CARRY,MOVE],
+                newName,
+                { memory: { role: 'linkUpgrader', upgrading: false, team: 0 } }) == 0){
+                    console.log("Spawning new miner: "  + newName);
+                }
         } else if (builders.length < 8) {
 
             var newName = "Bob" + Game.time;
@@ -272,7 +284,7 @@ module.exports.loop = function () {
                 //team: 1
             }
             //Handys / Repairers
-        } else if (repairers.length < 15) {
+        } else if (repairers.length < 10) {
 
             var newName = 'handy' + Game.time;
             if (RTeam1.length < 3) {
