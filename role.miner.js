@@ -4,7 +4,7 @@ var roleMiner = {
         //mining minerals in rooms
         if(creep.memory.mining){
             //has free space
-            if(creep.store.getFreeCapacity() > 70){
+            if(creep.store.getFreeCapacity() > 0){
                 //console.log(creep.room.find(FIND_MINERALS))
                 //find minerals
                 var minerals = creep.room.find(FIND_MINERALS);
@@ -39,7 +39,7 @@ var roleMiner = {
             if(creep.store.getUsedCapacity() >0){
                 //Find Terminals
                 var terminals = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_TERMINAL)});
-                // console.log(terminals)
+                console.log(terminals)
                 /*
                 loop through all constants
                     for (const resourceType in creep.store) {

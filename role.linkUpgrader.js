@@ -35,8 +35,13 @@ var roleUpgrader = {
 			} else {
 				//find all links
 				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
+				console.log(links);
+				
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
+				var upgradeLink = links[0];
+				links[0].transferEnergy(upgradeLink);
+
 				//remove energy
 				//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
 				var ret = creep.withdraw(links[0],RESOURCE_ENERGY)

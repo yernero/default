@@ -116,7 +116,8 @@ module.exports.loop = function () {
     var redTarget = myroom.find(FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
         //use towers to attack enemies
-        var towers = myroom.find(FIND_STRUCTURES, { filter: o => o.structureType === STRUCTURE_TOWER }); +
+        var towers = myroom.find(FIND_STRUCTURES, { 
+            filter: o => o.structureType === STRUCTURE_TOWER }); +
             towers.forEach(function (tower) {
                 Game.getObjectById(tower.id).attack(redTarget[0]);
             });
@@ -196,7 +197,7 @@ module.exports.loop = function () {
 
         } else if (linkFillers.length < 2) {
 
-            var newName = 'Filler' + Game.time;
+            var newName = 'Link Filler' + Game.time;
 
             if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
                 newName,
@@ -367,7 +368,7 @@ module.exports.loop = function () {
             "\tSettlers: " + settlers.length +
             "\tImports: " + importers.length);
         //check teams
-        console.log("Team 1 Harvesters: " + Hteam1.length + " Team 1 Builders : " + Bteam1.length);
+        console.log("Team 1 Harvesters: " + Hteam1.length + " Miners : " + miners.length);
         //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
         console.log("----------------------------------------------")
     }
