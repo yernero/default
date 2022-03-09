@@ -36,6 +36,9 @@ var roleFiller = {
 				creep.memory.storing = true;
 				creep.say('🧪');
 			} else {
+				var links = creep.room.find(FIND_STRUCTURES,{filter:
+					(i) => (i.structureType == STRUCTURE_LINK)
+					 && i.store.getFreeCapacity(RESOURCE_ENERGY) > 100});
 				collectContainers.run(creep);
 			}
 		}

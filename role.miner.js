@@ -39,7 +39,7 @@ var roleMiner = {
             if(creep.store.getUsedCapacity() >0){
                 //Find Terminals
                 var terminals = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_TERMINAL)});
-                console.log(terminals)
+                //console.log(terminals)
                 /*
                 loop through all constants
                     for (const resourceType in creep.store) {

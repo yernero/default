@@ -35,7 +35,7 @@ var roleUpgrader = {
 			} else {
 				//find all links
 				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
-				console.log(links);
+				//console.log(links);
 				
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );

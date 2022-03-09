@@ -157,6 +157,10 @@ module.exports.loop = function () {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
     });
     //console.log("Containers " + containers)
+
+
+
+
     //check ability to create new screep
     if (myroom.energyAvailable > 200) {
         //see if room has towers
@@ -285,7 +289,7 @@ module.exports.loop = function () {
                 //team: 1
             }
             //Handys / Repairers
-        } else if (repairers.length < 10) {
+        } else if (repairers.length < 5) {
 
             var newName = 'handy' + Game.time;
             if (RTeam1.length < 3) {
