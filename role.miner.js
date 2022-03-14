@@ -15,15 +15,19 @@ var roleMiner = {
                 switch (creep.harvest(minerals[0])) {
                     case 0: 
                         //successful, do nothing
+                        creep.memory.fillTerm =false;
                         break;
                     case -6:
                         creep.memory.fillTerm = true;
                     case -9: //not in range
-                        creep.moveTo(minerals[0]);
                         //move energy and minerals to Terminal
 
                         //get energy
-                        collectContainers.run(creep);
+                        if(creep.memory.fillTerm){
+                            collectContainers.run(creep);
+                        }else{
+                            creep.moveTo(minerals[0]);
+                        }
                         //get minerals
                         break;
                     case -11:
