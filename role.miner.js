@@ -1,3 +1,4 @@
+var collectContainers = require("collect.containers");
 var roleMiner = {
     /**@param {creep} creep **/
     run:function (creep){
@@ -14,8 +15,15 @@ var roleMiner = {
                     case 0: 
                         //successful, do nothing
                         break;
+                    case -6:
+                        creep.memory.fillTerm = true;
                     case -9: //not in range
                         creep.moveTo(minerals[0]);
+                        //move energy and minerals to Terminal
+
+                        //get energy
+                        collectContainers.run(creep);
+                        //get minerals
                         break;
                     case -11:
                         //creep is tired, ignore
@@ -52,7 +60,7 @@ var roleMiner = {
                     case 0: //successful
                         break;
                     case -9: //not in range
-                        creep.moveTo(terminals[0]);
+                        creep.moveTo(terminals[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
                         break;
                     case -10:
                         console.log("Fix args");
