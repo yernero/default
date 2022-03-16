@@ -11,7 +11,7 @@ var roleDefender = require("role.scavenger");
 var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
-var roleMiner  = require("role.miner");
+var roleMiner = require("role.miner");
 
 module.exports.loop = function () {
 
@@ -116,8 +116,9 @@ module.exports.loop = function () {
     var redTarget = myroom.find(FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
         //use towers to attack enemies
-        var towers = myroom.find(FIND_STRUCTURES, { 
-            filter: o => o.structureType === STRUCTURE_TOWER }); +
+        var towers = myroom.find(FIND_STRUCTURES, {
+            filter: o => o.structureType === STRUCTURE_TOWER
+        }); +
             towers.forEach(function (tower) {
                 Game.getObjectById(tower.id).attack(redTarget[0]);
             });
@@ -132,7 +133,7 @@ module.exports.loop = function () {
     //console.log(targets);
     Memory.toBeRepaired = targets;
     Memory.toBeRepairedContainers = containers;
-    
+
     //TODO
     //consider calculating this once and changing only when a new creep is made
     //Roles
@@ -162,10 +163,27 @@ module.exports.loop = function () {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
     });
     //console.log("Containers " + containers)
-
+    Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
     //Moving energy around links
-    var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.upgradeLink})
+    var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.upgradeLink })
     //console.log(links);    
+
+
+    var upgradeLink = Game.getObjectById(Memory.upgradeLink);
+    //console.log(upgradeLink);
+    //sort less first
+    links.sort((b, a) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+
+    if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
+        console.log("upgrade needs energy")
+        //sort links by size
+        //links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+        //console.log(links);
+        //check if link[0] can send energy
+        if(links[0].cooldown == 0){
+            console.log(links[0].transferEnergy(upgradeLink));
+        }
+    }
 
     //check ability to create new screep
     if (myroom.energyAvailable > 200) {
@@ -208,22 +226,22 @@ module.exports.loop = function () {
         } else if (linkFillers.length < 2) {
 
             var newName = 'Link Filler' + Game.time;
-            if(LFTeam0.length < 1){
+            if (LFTeam0.length < 1) {
                 if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
                     newName,
-                    { memory: { role: 'linkFiller', storing: false, team :0 } }) == 0) {
+                    { memory: { role: 'linkFiller', storing: false, team: 0 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
                 }
-            }else if(LFTeam1 < 1){
+            } else if (LFTeam1 < 1) {
                 if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
                     newName,
-                    { memory: { role: 'linkFiller', storing: false, team :1 } }) == 0) {
+                    { memory: { role: 'linkFiller', storing: false, team: 1 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
                 }
             }
-            
 
-        } else if (sourceFarmers.length < 6) {
+
+        } else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
             if (sfTeam0.length < 4) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
@@ -276,13 +294,13 @@ module.exports.loop = function () {
                 console.log("Spawning new uppity: " + newName);
             }
             //Builders
-        }else if(miners.length < 1){
+        } else if (miners.length < 1) {
             var newName = "miner" + Game.time;
-            if(Game.spawns['HELL'].spawnCreep([WORK,WORK,CARRY,MOVE],
+            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
                 newName,
-                { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0){
-                    console.log("Spawning new miner: "  + newName);
-                }
+                { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0) {
+                console.log("Spawning new miner: " + newName);
+            }
         } else if (builders.length < 8) {
 
             var newName = "Bob" + Game.time;
@@ -308,7 +326,7 @@ module.exports.loop = function () {
             var newName = 'handy' + Game.time;
             if (RTeam1.length < 3) {
                 if (myroom.energyAvailable > 400) {
-                    if (Game.spawns['HELL'].spawnCreep([WORK,WORK, CARRY, CARRY, MOVE,],
+                    if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE,],
                         newName,
                         { memory: { role: 'repairer', team: 1 } }) == 0) {
                         console.log('Spawning new handy: ' + newName);

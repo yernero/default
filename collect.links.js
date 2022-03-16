@@ -1,42 +1,34 @@
 var collectLinks = {
     /** @param {Creep} creep **/
     run: function (creep) {
-
+    //console.log(creep.memory.role);
       
+ 	//find all links
+     var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
+     //console.log(links);
+     
+     //sort by closest
+     links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
+     var upgradeLink = links[0];
+     //Memory.upgradeLink = upgradeLink.id;
+     links[0].transferEnergy(upgradeLink);
+
+     //remove energy
+     //console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
+     var ret = creep.withdraw(links[0],RESOURCE_ENERGY)
+     if(ret  == ERR_NOT_IN_RANGE){
+         creep.moveTo(links[0])
+     }else if(ret == ERR_NOT_ENOUGH_RESOURCES ){
+         var upgradeLink = links[0];
+         //remove upgradeLink
+         links.splice(0,1);
+         //sort by most energy stored
+         links.sort((a,b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
+         //transfer from link with energy to link without
+         links[0].transferEnergy(upgradeLink);
+         //console.log(links);
+     }
  
-            //find structures with energy
-            var targets = creep.room.find(FIND_STRUCTURES,
-                {
-                    filter: (i) => (i.structureType == STRUCTURE_CONTAINER ||
-                        i.structureType == STRUCTURE_STORAGE)
-                        && i.store[RESOURCE_ENERGY] > 50
-                });
-            //console.log("containers with more than 50 energy" +targets);
-
-            //sort by largest to smallest
-            targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
-            //console.log("Sorted targs" + targets);
-            //console.log(targets[0])
-
-            //console.log(creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' }}))
-
-            //if more than 1 structure with energy, go to first one
-            if (targets.length > 1) {
-                if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-                }
-                //if just 1 structure with energy, go to first one
-            } else if (targets.length == 1) {
-                if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-                }
-                //if no structure with energy, go to a source
-            } else {
-                var sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-                }
-            }
 
     }
 };

@@ -1,3 +1,4 @@
+var collectLinks = require("collect.links");
 var roleUpgrader = {
 
 	/** @param {Creep} creep **/
@@ -33,33 +34,14 @@ var roleUpgrader = {
 				creep.memory.upgrading = true;
 				creep.say('📈🔼');
 			} else {
-				//find all links
 				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
 				//console.log(links);
 				
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
 				var upgradeLink = links[0];
-				Memory.upgradeLink = upgradeLink.id;
-				links[0].transferEnergy(upgradeLink);
-
-				//remove energy
-				//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
-				var ret = creep.withdraw(links[0],RESOURCE_ENERGY)
-				if(ret  == ERR_NOT_IN_RANGE){
-					creep.moveTo(links[0])
-				}else if(ret == ERR_NOT_ENOUGH_RESOURCES ){
-					var upgradeLink = links[0];
-					//remove upgradeLink
-					links.splice(0,1);
-					//sort by most energy stored
-					links.sort((a,b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
-					//transfer from link with energy to link without
-					links[0].transferEnergy(upgradeLink);
-					//console.log(links);
-				}
-			
-
+				Memory.upgradeLink =  "6231f129cd5cb7d970a332f9";
+				collectLinks.run(creep);
 				//console.log(links);
 			}
 
