@@ -16,8 +16,10 @@ var roleMiner = {
                     case 0: 
                         //successful, do nothing
                         creep.memory.fillTerm =false;
+                        Memory.mineralEmpty = false;
                         break;
                     case -6:
+                        Memory.mineralEmpty = true;
                         creep.memory.fillTerm = true;
                     case -9: //not in range
                         //move energy and minerals to Terminal

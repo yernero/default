@@ -40,6 +40,7 @@ var roleUpgrader = {
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
 				var upgradeLink = links[0];
+				Memory.upgradeLink = upgradeLink.id;
 				links[0].transferEnergy(upgradeLink);
 
 				//remove energy

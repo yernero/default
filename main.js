@@ -132,6 +132,9 @@ module.exports.loop = function () {
     //console.log(targets);
     Memory.toBeRepaired = targets;
     Memory.toBeRepairedContainers = containers;
+    
+    //TODO
+    //consider calculating this once and changing only when a new creep is made
     //Roles
     var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
     var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkFiller");
@@ -151,6 +154,8 @@ module.exports.loop = function () {
     var sfTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "sourceFarmer")
     var RTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "repairer")
     var RTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
+    var LFTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "linkFiller");
+    var LFTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "linkFiller");
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
     var containers = myroom.find(FIND_STRUCTURES, {
@@ -158,8 +163,9 @@ module.exports.loop = function () {
     });
     //console.log("Containers " + containers)
 
-
-
+    //Moving energy around links
+    var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.upgradeLink})
+    //console.log(links);    
 
     //check ability to create new screep
     if (myroom.energyAvailable > 200) {
@@ -202,12 +208,20 @@ module.exports.loop = function () {
         } else if (linkFillers.length < 2) {
 
             var newName = 'Link Filler' + Game.time;
-
-            if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
-                newName,
-                { memory: { role: 'linkFiller', storing: false } }) == 0) {
-                console.log('Spawning new Link Filler: ' + newName);
+            if(LFTeam0.length < 1){
+                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'linkFiller', storing: false, team :0 } }) == 0) {
+                    console.log('Spawning new Link Filler: ' + newName);
+                }
+            }else if(LFTeam1 < 1){
+                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
+                    newName,
+                    { memory: { role: 'linkFiller', storing: false, team :1 } }) == 0) {
+                    console.log('Spawning new Link Filler: ' + newName);
+                }
             }
+            
 
         } else if (sourceFarmers.length < 6) {
             var newName = 'sourceFarmer' + Game.time;
