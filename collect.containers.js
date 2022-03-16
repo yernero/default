@@ -37,8 +37,10 @@ var collectContainers = {
                 });
             //console.log("containers with more than 50 energy" +targets);
 
+            //sort by closest
+            targets.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
             //sort by largest to smallest
-            targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+            //targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
             //console.log("Sorted targs" + targets);
             //console.log(targets[0])
 
