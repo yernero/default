@@ -16,6 +16,12 @@ var roleUpgrader = {
 				creep.memory.upgrading = false;
 				creep.say('⚡');
 			} else {
+				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
+				//console.log(links);
+				//sort by closest
+				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
+				var upgradeLink = links[0];
+				Memory.upgradeLink =  upgradeLink.id;
 				//Try to upgrade, move closer if needed
 				if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(creep.room.controller,
@@ -34,13 +40,7 @@ var roleUpgrader = {
 				creep.memory.upgrading = true;
 				creep.say('📈🔼');
 			} else {
-				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
-				//console.log(links);
 				
-				//sort by closest
-				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
-				var upgradeLink = links[0];
-				Memory.upgradeLink =  "6231f129cd5cb7d970a332f9";
 				collectLinks.run(creep);
 				//console.log(links);
 			}

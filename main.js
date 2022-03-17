@@ -163,7 +163,7 @@ module.exports.loop = function () {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
     });
     //console.log("Containers " + containers)
-    Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+   // Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
     //Moving energy around links
     var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.upgradeLink })
     //console.log(links);    
@@ -177,7 +177,7 @@ module.exports.loop = function () {
     if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
         console.log("upgrade needs energy")
         //sort links by size
-        //links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+        links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
         //console.log(links);
         //check if link[0] can send energy
         if(links[0].cooldown == 0){
