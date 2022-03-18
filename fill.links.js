@@ -20,11 +20,13 @@ var fillLinks = {
             if (creep.memory.team == 0) {
                 creep.memory.link = links[0].id;
             } else {
-                if(links.length > 1){
+                if (links.length > 1) {
                     creep.memory.link = links[1].id;
+                }else{
+                    creep.memory.link =links[0].id;
                 }
             }
-            
+
         }
         // console.log(Game.getObjectById(creep.memory.link));
         switch (creep.transfer(Game.getObjectById(creep.memory.link), RESOURCE_ENERGY)) {
@@ -35,6 +37,8 @@ var fillLinks = {
                 //not in range
                 creep.moveTo(Game.getObjectById(creep.memory.link));
                 break;
+            case -7:
+                console.log("Invalid Link reference " + Game.getObjectById(creep.memory.link));
             case -8:
                 //full link
                 fillContainers.run(creep)
@@ -42,9 +46,6 @@ var fillLinks = {
             default:
                 console.log(creep.transfer(Game.getObjectById(creep.memory.link), RESOURCE_ENERGY));
                 console.log("Unknown Error in Fill Links");
-        }
-        if (creep.transfer(Game.getObjectById(creep.memory.link), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(Game.getObjectById(creep.memory.link));
         }
         //console.log(links);
 

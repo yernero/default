@@ -21,7 +21,9 @@ module.exports.loop = function () {
     if(Memory.repairs == null){
         Memory.repairs = {};
     }
-
+    if(Memory.storage == null){
+        Memory.storage = {};
+    }
     for (var name in Memory.creeps) {
         //clear dead creeps from memory
         if (!Game.creeps[name]) {
