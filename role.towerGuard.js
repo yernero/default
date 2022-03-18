@@ -1,5 +1,5 @@
 var roleUpgrader = require("role.upgrader");
-
+var collectContainers = require("collect.containers");
 var towerGuard = {
 
 	run: function (creep) {
@@ -29,22 +29,7 @@ var towerGuard = {
 				creep.memory.filling = true;
 				creep.say('⚡ filling');
 			} else {
-				//find energy
-				var sources = creep.room.find(FIND_STRUCTURES, {
-					filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) &&
-						i.store[RESOURCE_ENERGY] > 0
-				});
-				//console.log(sources);
-				//console.log(sources[0].store.);
-				//if(sources[0].store.energy == 0){
-				// console.log("harvesters need to work harder");
-				// }
-				//.filter(return (structure) => structure.energy >0);
-
-				//get energy
-				if (creep.withdraw(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
-				}
+				collectContainers.run(creep);
 			}
 
 		}

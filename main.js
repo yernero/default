@@ -14,7 +14,13 @@ var roleLinkFiller = require("role.linkFiller");
 var roleMiner = require("role.miner");
 
 module.exports.loop = function () {
-
+    //declare memory variables
+    if(Memory.links == null){
+        Memory.links = {};
+    }
+    if(Memory.repairs == null){
+        Memory.repairs = {};
+    }
 
     for (var name in Memory.creeps) {
         //clear dead creeps from memory
@@ -131,8 +137,8 @@ module.exports.loop = function () {
     //find just containers that need to be repaired
     var containers = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
     //console.log(targets);
-    Memory.toBeRepaired = targets;
-    Memory.toBeRepairedContainers = containers;
+    Memory.repairs.toBeRepaired = targets;
+    Memory.repairs.toBeRepairedContainers = containers;
 
     //TODO
     //consider calculating this once and changing only when a new creep is made
@@ -165,23 +171,30 @@ module.exports.loop = function () {
     //console.log("Containers " + containers)
    // Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
     //Moving energy around links
-    var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.upgradeLink })
+    var links = myroom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
     //console.log(links);    
+    Memory.links.storageLink = "61d4ce772820989709494112";
 
-
-    var upgradeLink = Game.getObjectById(Memory.upgradeLink);
+    var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
     //console.log(upgradeLink);
     //sort less first
     links.sort((b, a) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
 
-    if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
-        console.log("upgrade needs energy")
-        //sort links by size
+    if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 400) {
+        //console.log("upgrade needs energy")
+        //sort links by size large to small
         links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
         //console.log(links);
         //check if link[0] can send energy
         if(links[0].cooldown == 0){
-            console.log(links[0].transferEnergy(upgradeLink));
+            switch(links[0].transferEnergy(upgradeLink)){
+                case 0:
+                    //do nothing
+                    break;
+                default:
+                    //idk what happened
+                    console.log(links[0].transferEnergy(upgradeLink));
+            }
         }
     }
 

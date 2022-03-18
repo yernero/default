@@ -21,7 +21,7 @@ var roleUpgrader = {
 				//sort by closest
 				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
 				var upgradeLink = links[0];
-				Memory.upgradeLink =  upgradeLink.id;
+				Memory.links.upgradeLink =  upgradeLink.id;
 				//Try to upgrade, move closer if needed
 				if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(creep.room.controller,

@@ -9,21 +9,22 @@ var collectLinks = {
      
      //sort by closest
      links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
-     var upgradeLink = links[0];
-     //Memory.upgradeLink = upgradeLink.id;
+     var upgradeLink =Game.getObjectById(Memory.links.upgradeLink);
+     //Memory.links.upgradeLink = upgradeLink.id;
      //links[0].transferEnergy(upgradeLink);
 
      //remove energy
      //console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
-     switch(creep.withdraw(links[0],RESOURCE_ENERGY)){
+     switch(creep.withdraw(upgradeLink,RESOURCE_ENERGY)){
         case 0:
             //success
             break;
         case -9:
-            creep.moveTo(links[0])
+            creep.moveTo(upgradeLink)
             break;
         case -6:
-            var upgradeLink = Game.getObjectById(Memory.upgradeLink);
+            //not enough res in link
+            
             //remove upgradeLink
             links.splice(0,1);
             //sort by most energy stored
@@ -33,7 +34,7 @@ var collectLinks = {
             //console.log(links);
             break;
         default:
-            console.log(creep.withdraw(links[0],RESOURCE_ENERGY));
+            console.log(creep.withdraw(upgradeLink,RESOURCE_ENERGY));
 
      }
 

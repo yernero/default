@@ -18,9 +18,9 @@ var roleFiller = {
 				creep.say('⚡');
 			} else {
 				if(creep.memory.team == 0){
-					Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+					Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
 
-					var upgradeLink = Game.getObjectById(Memory.upgradeLink);
+					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 
 					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
 						fillLinks.run(creep);
@@ -41,11 +41,11 @@ var roleFiller = {
 				creep.say('🧪');
 			} else {
 				if(creep.memory.team == 0){
-					Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+					Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
 
-					var upgradeLink = Game.getObjectById(Memory.upgradeLink);
+					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 
-					console.log(upgradeLink);
+					//console.log(upgradeLink);
 					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
 						collectContainers.run(creep);
 					}else{

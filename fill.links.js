@@ -9,7 +9,7 @@ var fillLinks = {
             var links = creep.room.find(FIND_STRUCTURES, {
                 filter:
                     (i) => (i.structureType == STRUCTURE_LINK)
-                        && i.store.getFreeCapacity(RESOURCE_ENERGY) > 99 && i.id != Memory.upgradeLink
+                        && i.store.getFreeCapacity(RESOURCE_ENERGY) > 99 && i.id != Memory.links.upgradeLink
             })
             //show links
             //console.log("Links" + links);
@@ -20,8 +20,11 @@ var fillLinks = {
             if (creep.memory.team == 0) {
                 creep.memory.link = links[0].id;
             } else {
-                creep.memory.link = links[1].id;
+                if(links.length > 1){
+                    creep.memory.link = links[1].id;
+                }
             }
+            
         }
         // console.log(Game.getObjectById(creep.memory.link));
         switch (creep.transfer(Game.getObjectById(creep.memory.link), RESOURCE_ENERGY)) {
