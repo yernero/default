@@ -1,4 +1,5 @@
 var collectContainers = require("collect.containers");
+var fillTerminals = require("fill.terminals");
 var roleMiner = {
     /**@param {creep} creep **/
     run:function (creep){
@@ -62,33 +63,7 @@ var roleMiner = {
             //creep.drop(RESOURCE_ENERGY);
             //has materials
             if(creep.store.getUsedCapacity() >0){
-                //Find Terminals
-                var terminals = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_TERMINAL)});
-                //console.log(terminals)
-                /*
-                loop through all constants
-                    for (const resourceType in creep.store) {
-
-                        if (creep.transfer(target, resourceType) == OK) break
-                    }   
-                */
-                //transfer mineral to link
-                switch(creep.transfer(terminals[0], creep.memory.mineral )){
-                    case 0: //successful
-                        break;
-                    case -6:
-                        creep.transfer(terminals[0], RESOURCE_ENERGY );
-                    case -9: //not in range
-                        creep.moveTo(terminals[0], { visualizePathStyle: { stroke: '#FFC0CB' } });
-                        break;
-                    case -10:
-                        console.log("Fix args");
-                        break;
-                    default:
-                        console.log(creep.transfer(terminals[0], creep.memory.mineral ));
-                        console.log("unknown Error in miner transfer, investigate")
-                        break;
-                }
+                fillTerminals.run(creep);
             }else{//out of materials
                  //mine again
                  creep.memory.mining = true;

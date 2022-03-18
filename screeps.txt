@@ -1,11 +1,49 @@
 Screeps
 Fill
 	containers
-		
+		Find containers and storage with free Capacity
+		if none
+			be a builder
+		else
+			find targets with open space
+			if none
+				DEPRECATED METHODS
+			fill last container in targets
+			if team 0
+
+				
+			else if team 1
+
 	links
-	
+		check if a Link is assigned to creep
+		if not
+			display to console error
+		else
+			attempt to transfer energy to link assocaited with creep
+			if good
+				do nothing
+			if not in range
+				move to
+			if  link doesnt exist
+				dispaly Error
+			if link is full
+				fill a container instead (should fill closest container)
+			else 
+				display error
 	terminals
-	
+		Find terminal
+		Attempt to transfer mineral to Terminal (should change to whatever is in creep)
+		if good
+			do nothing
+		if no mineral
+			try to transfer energy
+		if not in range
+			move to
+		if bad arguments
+			display error
+		else 
+			display error
+
 Collect
 	containers
 	links
