@@ -1,43 +1,50 @@
 var collectLinks = {
     /** @param {Creep} creep **/
     run: function (creep) {
-    //console.log(creep.memory.role);
-      
- 	//find all links
-     var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
-     //console.log(links);
-     
-     //sort by closest
-     links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
-     var upgradeLink =Game.getObjectById(Memory.links.upgradeLink);
-     //Memory.links.upgradeLink = upgradeLink.id;
-     //links[0].transferEnergy(upgradeLink);
+        //console.log(creep.memory.role);
 
-     //remove energy
-     //console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
-     switch(creep.withdraw(upgradeLink,RESOURCE_ENERGY)){
-        case 0:
-            //success
-            break;
-        case -9:
-            creep.moveTo(upgradeLink)
-            break;
-        case -6:
-            //not enough res in link
-            
-            //remove upgradeLink
-            links.splice(0,1);
-            //sort by most energy stored
-            links.sort((a,b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
-            //transfer from link with energy to link without
-            links[0].transferEnergy(upgradeLink);
-            //console.log(links);
-            break;
-        default:
-            console.log(creep.withdraw(upgradeLink,RESOURCE_ENERGY));
+        if (creep.memory.link == null) {
+            console.log(creep.name + " needs a link");
+        } else {
+            //Memory.links.upgradeLink = upgradeLink.id;
+            //links[0].transferEnergy(upgradeLink);
+            var link = Game.getObjectById(creep.memory.link);
+            //remove energy
+            //console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
+            switch (creep.withdraw(link, RESOURCE_ENERGY)) {
+                case 0:
+                    //success
+                    break;
+                case -9:
+                    //out of range
+                    creep.moveTo(link);
+                    break;
+                case -6:
+                    //not enough res in link
+                    if (creep.memory.role == "linkUpgrader") {
+                        //upgrader waits
+                    } else {
+                        //find all links not upgrade link
+                        var links = creep.room.find(FIND_STRUCTURES, {
+                            filter: (i) => i.structureType == STRUCTURE_LINK
+                                && i.store.getUsedCapacity(RESOURCE_ENERGY) > 50
+                                && i.id != Memory.links.upgradeLink
+                        })
+                        //sort by closest
+                        //links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+                        //sort by most energy stored
+                        links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
+                        //transfer from link with energy to link without
+                        links[0].transferEnergy(link);
+                        //console.log(links);
+                    }
+                    break;
+                default:
+                    console.log(creep.withdraw(creep.memory.link, RESOURCE_ENERGY));
+                    console.log("issuing drawing from link " + link.id);
 
-     }
-
+            }
+        }
     }
 };
 

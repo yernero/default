@@ -15,13 +15,13 @@ var roleMiner = require("role.miner");
 
 module.exports.loop = function () {
     //declare memory variables
-    if(Memory.links == null){
+    if (Memory.links == null) {
         Memory.links = {};
     }
-    if(Memory.repairs == null){
+    if (Memory.repairs == null) {
         Memory.repairs = {};
     }
-    if(Memory.storage == null){
+    if (Memory.storage == null) {
         Memory.storage = {};
     }
     for (var name in Memory.creeps) {
@@ -171,7 +171,7 @@ module.exports.loop = function () {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
     });
     //console.log("Containers " + containers)
-   // Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+    // Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
     //Moving energy around links
     var links = myroom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
     //console.log(links);    
@@ -182,14 +182,15 @@ module.exports.loop = function () {
     //sort less first
     links.sort((b, a) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
 
+    //making sure upgradeLink has energy
     if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 400) {
         //console.log("upgrade needs energy")
         //sort links by size large to small
         links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
         //console.log(links);
         //check if link[0] can send energy
-        if(links[0].cooldown == 0){
-            switch(links[0].transferEnergy(upgradeLink)){
+        if (links[0].cooldown == 0) {
+            switch (links[0].transferEnergy(upgradeLink)) {
                 case 0:
                     //do nothing
                     break;
