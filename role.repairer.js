@@ -16,8 +16,9 @@ var roleRepairer = {
 
 				//console.log("repair these " +targets);
 				//console.log("repair this: " + creep.memory.dest); 
-				if (Memory.toBeRepaired.length < 1) {
+				if (Memory.repairs.toBeRepaired == null ||Memory.repairs.toBeRepaired.length < 1) {
 					//creep.memory.upgrading = true;
+					console.log("undefined");
 					roleUpgrader.run(creep);
 
 				} else {
@@ -30,42 +31,42 @@ var roleRepairer = {
 						//check for containers
 						//var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
 						//if containers need repairing delete extra targets
-						if (Memory.toBeRepairedContainers.length > 0) {
+						if (Memory.repairs.toBeRepairedContainers.length > 0) {
 							//check if dest is set
 							if (!creep.memory.dest) {
-								creep.memory.dest = Memory.toBeRepairedContainers[0].id;
+								creep.memory.dest = Memory.repairs.toBeRepairedContainers[0].id;
 							}
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
 							//console.log("dest: " + dest.hits + " / " + dest.hitsMax);
 							//check if dest is invalid or full
 							if (!dest || dest.hits == dest.hitsMax) {
-								creep.memory.dest = Memory.toBeRepairedContainers[0].id;
+								creep.memory.dest = Memory.repairs.toBeRepairedContainers[0].id;
 								dest = Game.getObjectById(creep.memory.dest);
 							}
 						} else {
 							//check if dest is set
 							if (!creep.memory.dest) {
-								creep.memory.dest = Memory.toBeRepaired[Memory.toBeRepaired.length - 1].id;
+								creep.memory.dest = Memory.repairs.toBeRepaired[Memory.repairs.toBeRepaired.length - 1].id;
 							}
 							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
 							var dest = Game.getObjectById(creep.memory.dest);
 							//console.log("dest: " + dest.hits + " / " + dest.hitsMax);
 							//check if dest is invalid or full
 							if (!dest || dest.hits == dest.hitsMax) {
-								creep.memory.dest = Memory.toBeRepaired[Memory.toBeRepaired.length - 1].id;
+								creep.memory.dest = Memory.repairs.toBeRepaired[Memory.repairs.toBeRepaired.length - 1].id;
 								dest = Game.getObjectById(creep.memory.dest);
 							}
 						}
 						//not team 1
 					} else {
 						if (!creep.memory.dest) {
-							creep.memory.dest = Memory.toBeRepaired[0].id;
+							creep.memory.dest = Memory.repairs.toBeRepaired[0].id;
 						}
 						var dest = Game.getObjectById(creep.memory.dest);
 						//console.log(dest);
 						if (!dest || dest.hits == dest.hitsMax) {
-							creep.memory.dest = Memory.toBeRepaired[0].id;
+							creep.memory.dest = Memory.repairs.toBeRepaired[0].id;
 							dest = Game.getObjectById(creep.memory.dest);
 						}
 					}

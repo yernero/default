@@ -1,10 +1,15 @@
 var roleUpgrader = require("role.upgrader");
 var collectSources = require("collect.sources");
 var collectContainers = require("collect.containers");
+var fillLinks = require("fill.links");
+var collectLinks = require("collect.links");
+var fillContainers = require("fill.containers");
 var roleFiller = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
+		//console.log(creep.pos);
+
 		/* var targets = creep.room.find(FIND_STRUCTURES,{filter: (structure) => return (structure.structureType == STRUCTURE_STORAGE ||structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.store.getFreeCapacity() > 0});
 		 *///finding all storage containers not spawn with space left
 		if (creep.memory.storing) {
@@ -12,18 +17,19 @@ var roleFiller = {
 				creep.memory.storing = false;
 				creep.say('⚡');
 			} else {
-					//find all links
-					var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_LINK) && i.store.getFreeCapacity(RESOURCE_ENERGY) > 100})
-					//show links
-					//console.log("Links" + links);
-					//sort by closest
-					links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
-					//remove energy
-					//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
-					if(creep.transfer(links[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-						creep.moveTo(links[0])
+				if(creep.memory.team == 0){
+					Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+
+					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
+
+					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
+						fillLinks.run(creep);
+					}else{
+						fillContainers.run(creep);
 					}
-					//console.log(links);
+				}else if(creep.memory.team == 1){
+					fillLinks.run(creep);
+				}
 			}
 
 		} else {
@@ -34,7 +40,21 @@ var roleFiller = {
 				creep.memory.storing = true;
 				creep.say('🧪');
 			} else {
-				collectContainers.run(creep);
+				if(creep.memory.team == 0){
+					Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+
+					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
+
+					//console.log(upgradeLink);
+					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
+						collectContainers.run(creep);
+					}else{
+						collectLinks.run(creep);
+					}
+				}else if(creep.memory.team == 1){
+					collectContainers.run(creep);
+				}
+
 			}
 		}
 		//creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});
