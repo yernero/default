@@ -27,6 +27,7 @@ var roleUpgrader = {
 					var upgradeLink = links[0];
 					Memory.links.upgradeLink = upgradeLink.id;
 				}
+			
 				//Try to upgrade, move closer if needed
 				if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(creep.room.controller,
@@ -43,9 +44,8 @@ var roleUpgrader = {
 			//changing status
 			if (creep.store.getFreeCapacity() == 0) {
 				creep.memory.upgrading = true;
-				creep.say('📈🔼');
+				creep.say('🔼');//📈
 			} else {
-
 				collectLinks.run(creep);
 				//console.log(links);
 			}

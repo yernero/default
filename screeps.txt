@@ -1,0 +1,28 @@
+Screeps
+Fill
+	containers
+		
+	links
+	
+	terminals
+	
+Collect
+	containers
+	links
+	sources
+Roles
+	builder
+	defender
+	filler
+	harvester
+	importer
+	linkfiller
+	linkupgrader
+	miner
+	recoverer
+	repairer
+	scavenger
+	settler
+	sourceFarmer
+	upgrader
+	
