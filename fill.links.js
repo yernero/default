@@ -9,8 +9,8 @@ var fillLinks = {
             var links = creep.room.find(FIND_STRUCTURES, {
                 filter:
                     (i) => (i.structureType == STRUCTURE_LINK)
-                        && i.store.getFreeCapacity(RESOURCE_ENERGY) > 99 && i.id != Memory.links.upgradeLink
-            })
+                        && i.store.getFreeCapacity(RESOURCE_ENERGY) > 99 
+                        && i.id != Memory.links.upgradeLink})
             //show links
             //console.log("Links" + links);
             //sort by closest

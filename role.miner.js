@@ -5,6 +5,16 @@ var roleMiner = {
         //console.log("miner location"  +creep.pos)
         //mining minerals in rooms
         if(creep.memory.mining){
+            if(Memory.storage.mineStorage == null){
+                
+                var storage = creep.room.find(FIND_STRUCTURES,
+                    {filter: (i) => (i.structureType == STRUCTURE_CONTAINER
+                        ||i.structureType == STRUCTURE_STORAGE)});
+                storage.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+                console.log(storage[0]);
+
+                Memory.storage.mineStorage = storage[0].id;
+            }
             //has free space
             if(creep.store.getFreeCapacity() > 0){
                 //console.log(creep.room.find(FIND_MINERALS))
