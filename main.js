@@ -12,28 +12,12 @@ var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
 var roleMiner = require("role.miner");
+var collectDead = require("role.miner");
 
 module.exports.loop = function () {
-    //declare memory variables
-    if (Memory.links == null) {
-        Memory.links = {};
-    }
-    if (Memory.repairs == null) {
-        Memory.repairs = {};
-    }
-    if (Memory.storage == null) {
-        Memory.storage = {};
-    }
-    for (var name in Memory.creeps) {
-        //clear dead creeps from memory
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
 
-
-    }
     var myroom;
+
     //checks if roomName is in memory
     if (_.has(Memory, 'roomName')) {
         //If roomName is stored, convert into a room for myroom
@@ -50,6 +34,39 @@ module.exports.loop = function () {
             }
         }
     }
+
+    //declare memory variables
+    if (Memory.links == null) {
+        Memory.links = {};
+    }
+    if (Memory.repairs == null) {
+        Memory.repairs = {};
+    }
+    if (Memory.storage == null) {
+        Memory.storage = {};
+    }
+    if (Memory.constructionSites == null) {
+        Memory.constructionSites = {};
+    }
+    delete Memory.sources;
+    if (true ||!Memory.sources) {
+        Memory.sources = {};
+        var sources = myroom.find(FIND_SOURCES);
+        for(let i = 0; i < sources.length; i++){
+            Memory.sources.i = sources[i].id;
+        }
+       
+    }
+    for (var name in Memory.creeps) {
+        //clear dead creeps from memory
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+    }
+
+
+
     //console.log("room" +myroom);
     //finds room and puts in myroom without using memory
     /*
@@ -71,6 +88,9 @@ module.exports.loop = function () {
         var creep = Game.creeps[name];
         countCreeps++;
         switch (creep.memory.role) {
+            case "collector":
+                collectDead.run(creep);
+                break;
             case "harvester":
                 roleHarvester.run(creep);
                 break;
@@ -197,6 +217,23 @@ module.exports.loop = function () {
                 default:
                     //idk what happened
                     console.log(links[0].transferEnergy(upgradeLink));
+            }
+        }
+    }
+    //empty the other source link
+    var storageLink = Game.getObjectById(Memory.links.storageLink);
+    //if storageLink can handle energy
+    if(storageLink.store.getFreeCapacity() > 100){
+        var links = myroom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink && i.id != Memory.links.storageLink})
+        links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
+        if (links[0].cooldown == 0) {
+            switch (links[0].transferEnergy(storageLink)) {
+                case 0:
+                    //do nothing
+                    break;
+                default:
+                    //idk what happened
+                    console.log(links[0].transferEnergy(storageLink));
             }
         }
     }

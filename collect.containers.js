@@ -1,3 +1,4 @@
+var collectSources = require("collect.sources")
 var collectContainers = {
     /** @param {Creep} creep **/
     run: function (creep) {
@@ -13,6 +14,7 @@ var collectContainers = {
         //check if any Dropped res worth collecting
         if (droppedres.length > 0) {
             //console.log("Dropped res[0] amount: " + droppedres[0].amount);
+            droppedres.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
 
             //check if creep can pickup energy
             if (creep.pickup(droppedres[0]) == ERR_NOT_IN_RANGE) {
@@ -21,7 +23,7 @@ var collectContainers = {
                     { visualizePathStyle: { stroke: '#ffffff' } }) == ERR_NO_PATH
                     && droppedres.length > 1) {
 
-                    creep.moveTo(droppedres[droppedres.length - 1],
+                    creep.moveTo(droppedres[1],
                         { visualizePathStyle: { stroke: '#ffffff' } })
                 }
             }
@@ -58,10 +60,7 @@ var collectContainers = {
                 }
                 //if no structure with energy, go to a source
             } else {
-                var sources = creep.room.find(FIND_SOURCES);
-                if (creep.harvest(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-                }
+               collectSources.run(creep);
             }
         }
 

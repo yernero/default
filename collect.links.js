@@ -30,14 +30,19 @@ var collectLinks = {
                                 && i.store.getUsedCapacity(RESOURCE_ENERGY) > 50
                                 && i.id != Memory.links.upgradeLink
                         })
+                        console.log("Links with energy " + links);
                         //sort by closest
                         //links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
                         //sort by most energy stored
-                        links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
-                        //transfer from link with energy to link without
-                        links[0].transferEnergy(link);
-                        //console.log(links);
-                    }
+                        if(links.length > 0){
+                            links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY))
+                            //transfer from link with energy to link without
+                            
+                            links[0].transferEnergy(link);
+                            //console.log(links);
+                        }
+                        }
+                        
                     break;
                 default:
                     console.log(creep.withdraw(creep.memory.link, RESOURCE_ENERGY));

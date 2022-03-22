@@ -52,8 +52,9 @@ var roleFiller = {
 					//Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
 
 					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
+					var link = Game.getObjectById(creep.memory.link);
 
-					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
+					if(link.store.getFreeCapacity(RESOURCE_ENERGY) > 700){
 						fillLinks.run(creep);
 					}else{
 						fillContainers.run(creep);
@@ -77,7 +78,7 @@ var roleFiller = {
 					var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 
 					//console.log(upgradeLink);
-					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 100){
+					if(upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) > 700){
 						collectContainers.run(creep);
 					}else{
 						collectLinks.run(creep);

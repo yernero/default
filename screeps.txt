@@ -1,4 +1,9 @@
 Screeps
+Main
+	Create links in memory
+	create repairs in memory
+	create storage in memory
+
 Fill
 	containers
 		Find containers and storage with free Capacity
@@ -27,6 +32,8 @@ Fill
 			if  link doesnt exist
 				dispaly Error
 			if link is full
+				find links with energy
+				
 				fill a container instead (should fill closest container)
 			else 
 				display error
@@ -46,11 +53,53 @@ Fill
 
 Collect
 	containers
+		look for dropped energy greater than 1000
+		if dropped res exists
+			sort by location
+			try to pickup closest
+			if not in range
+				move to
+				if ERR_NO_PATH and a second dropped res exists
+					go next closest droppedres
+		else
+			find structures with more than 50 energy
+			sort by closest
+			if structures exist
+				withdraw/move to closest
+			else
+				collect from sources
+
 	links
+		check if creep has link in memory
+		if it does not	
+			display error
+		else
+			create link from memory using id
+			try to withdraw from link
+			if good
+				do nothing
+			if out of range
+				move to
+			if not enough in link
+				if upgrader
+					wait for more energy
+				else
+					find links with more than 50 and not upgrade link
+					sort links by most energy
+					send energy from link with most energy to creep's link
+			else
+				display error
 	sources
+		find sources
+		sort by closest
+		harvest/move to source
 Roles
 	builder
+
 	defender
+		Find Hostile creeps
+		if they exist
+			attack hostile creep
 	filler
 	harvester
 	importer
