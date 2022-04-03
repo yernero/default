@@ -48,6 +48,9 @@ module.exports.loop = function () {
     if (Memory.constructionSites == null) {
         Memory.constructionSites = {};
     }
+    if (Memory.terminal == null) {
+        Memory.terminal = myroom.terminal;
+    }
     delete Memory.sources;
     if (true ||!Memory.sources) {
         Memory.sources = {};
@@ -64,8 +67,22 @@ module.exports.loop = function () {
             console.log('Clearing non-existing creep memory:', name);
         }
     }
+    //console.log(myroom.terminal.cooldown)
+    if(myroom.terminal.store[RESOURCE_UTRIUM] > 0 && myroom.terminal.cooldown < 1){
+        console.log("utrium exists")
+        buyUtrium = Game.market.getAllOrders({type: ORDER_BUY, resourceType: RESOURCE_UTRIUM});
+        buyUtrium.sort((orderA, orderB) => orderB.price - orderA.price);
+        sellAmount = buyUtrium[0].remainingAmount;
+        if(buyUtrium[0].remainingAmount > myroom.terminal.store[RESOURCE_UTRIUM]){
+            sellAmount = myroom.terminal.store[RESOURCE_UTRIUM];
+        }
+        console.log("Sold " + sellAmount + " Utrium at "  + buyUtrium[0].price);
+        console.log(Game.market.deal(buyUtrium[0].id,sellAmount,myroom.name));
+       
+        Memory.test = buyUtrium[0]; // fast
 
-
+    }
+    
 
     //console.log("room" +myroom);
     //finds room and puts in myroom without using memory
@@ -349,7 +366,7 @@ module.exports.loop = function () {
             //Builders
         } else if (miners.length < 1) {
             var newName = "miner" + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
+            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK,CARRY, CARRY, MOVE],
                 newName,
                 { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0) {
                 console.log("Spawning new miner: " + newName);

@@ -15,6 +15,9 @@ var collectLinks = {
                 case 0:
                     //success
                     break;
+                case -4:
+                    //creep still spawning
+                    break;
                 case -9:
                     //out of range
                     creep.moveTo(link);
