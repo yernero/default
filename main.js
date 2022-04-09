@@ -16,24 +16,6 @@ var collectDead = require("role.miner");
 
 module.exports.loop = function () {
 
-    var myroom;
-
-    //checks if roomName is in memory
-    if (_.has(Memory, 'roomName')) {
-        //If roomName is stored, convert into a room for myroom
-        myroom = Game.rooms[Memory.roomName];
-    } else {
-        //searches every room 
-        for (let key in Game.rooms) {
-            let room = Game.rooms[key]
-            //checks if room has a controller and is controlled by me
-            if (room.controller && room.controller.my) {
-                //stores room name
-                Memory.roomName = key;
-                break;
-            }
-        }
-    }
 
     //declare memory variables
     if (Memory.links == null) {
@@ -49,54 +31,76 @@ module.exports.loop = function () {
         Memory.constructionSites = {};
     }
     if (Memory.terminal == null) {
-        Memory.terminal = myroom.terminal;
+        Memory.terminal = myRoom.terminal;
     }
-    delete Memory.sources;
-    if (true ||!Memory.sources) {
+    if (Memory.rooms == null || Memory.rooms.myRooms == null) {
+        Memory.rooms = {};
+        Memory.rooms.myRooms = {};
+    }
+
+    if (Memory.sources == null) {
         Memory.sources = {};
-        var sources = myroom.find(FIND_SOURCES);
-        for(let i = 0; i < sources.length; i++){
+    }
+    var myRoom;
+
+    //checks if roomName is in memory
+    if (_.has(Memory.rooms, 'myRooms')) {
+        //If roomName is stored, convert into a room for myRoom
+        myRoom = Game.rooms[Memory.rooms.myRooms[0]];
+    } else {
+        //searches every room 
+        for (let key in Game.rooms) {
+            let room = Game.rooms[key]
+            //checks if room has a controller and is controlled by me
+            if (room.controller && room.controller.my) {
+                //stores room name
+                if (_.has(Memory, "rooms")) {
+                    if (_.has(Memory.rooms, "myRooms")) {
+                        var myRooms = Memory.rooms.myRooms;
+                        myRooms[0] = key;
+                        //console.log(Memory.rooms.myRooms[0]);
+                    } else {
+                        Memory.rooms.myRooms = {};
+                    }
+                } else {
+                    Memory.rooms = {};
+
+                }
+
+            }
+        }
+        //finds room and puts in myRoom without using memory
+        /*
+        for (let key in Game.rooms) {
+           let room = Game.rooms[key]
+           if (room.controller && room.controller.my) {
+               myRoom = room;
+               break;
+           }
+       }*/
+    }
+    //console.log("room" +myRoom);
+    Memory.test = {};
+    Memory.test.room = myRoom.controller;
+    //console.log(myRoom);
+
+    if (Memory.sources == null) {
+        Memory.sources = {};
+        var sources = myRoom.find(FIND_SOURCES);
+        for (let i = 0; i < sources.length; i++) {
             Memory.sources.i = sources[i].id;
         }
-       
-    }
-    for (var name in Memory.creeps) {
-        //clear dead creeps from memory
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
-    //console.log(myroom.terminal.cooldown)
-    if(myroom.terminal.store[RESOURCE_UTRIUM] > 0 && myroom.terminal.cooldown < 1){
-        console.log("utrium exists")
-        buyUtrium = Game.market.getAllOrders({type: ORDER_BUY, resourceType: RESOURCE_UTRIUM});
-        buyUtrium.sort((orderA, orderB) => orderB.price - orderA.price);
-        sellAmount = buyUtrium[0].remainingAmount;
-        if(buyUtrium[0].remainingAmount > myroom.terminal.store[RESOURCE_UTRIUM]){
-            sellAmount = myroom.terminal.store[RESOURCE_UTRIUM];
-        }
-        console.log("Sold " + sellAmount + " Utrium at "  + buyUtrium[0].price);
-        console.log(Game.market.deal(buyUtrium[0].id,sellAmount,myroom.name));
-       
-        Memory.test = buyUtrium[0]; // fast
 
     }
-    
-
-    //console.log("room" +myroom);
-    //finds room and puts in myroom without using memory
-    /*
-    for (let key in Game.rooms) {
-       let room = Game.rooms[key]
-       if (room.controller && room.controller.my) {
-           myroom = room;
-           break;
-       }
-   }*/
+    clearMemory();
+    sellRes(myRoom, RESOURCE_UTRIUM);
 
 
-    //var myroom = Game.rooms["W8S53"];
+
+
+
+
+    //var myRoom = Game.rooms["W8S53"];
     //var ruin = Game.getObjectById('5f29b8885eb8e32fb300fa06');
 
     var countCreeps = 0;
@@ -158,10 +162,10 @@ module.exports.loop = function () {
     }
 
     //Look for enemies
-    var redTarget = myroom.find(FIND_HOSTILE_CREEPS);
+    var redTarget = myRoom.find(FIND_HOSTILE_CREEPS);
     if (redTarget.length > 0) {
         //use towers to attack enemies
-        var towers = myroom.find(FIND_STRUCTURES, {
+        var towers = myRoom.find(FIND_STRUCTURES, {
             filter: o => o.structureType === STRUCTURE_TOWER
         }); +
             towers.forEach(function (tower) {
@@ -170,7 +174,7 @@ module.exports.loop = function () {
     }
 
     //find things to be repaired
-    var targets = myroom.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
+    var targets = myRoom.find(FIND_STRUCTURES, { filter: object => object.hits < object.hitsMax });
     //sorted least hits/hitsmax to most
     targets.sort((a, b) => a.hits / a.hitsMax - b.hits / b.hitsMax);
     //find just containers that need to be repaired
@@ -204,13 +208,13 @@ module.exports.loop = function () {
     var LFTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "linkFiller");
 
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
-    var containers = myroom.find(FIND_STRUCTURES, {
+    var containers = myRoom.find(FIND_STRUCTURES, {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
     });
     //console.log("Containers " + containers)
     // Memory.upgradeLink =  "61ea04390bd2bf1717dc4e56";
     //Moving energy around links
-    var links = myroom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
+    var links = myRoom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
     //console.log(links);    
     Memory.links.storageLink = "61d4ce772820989709494112";
 
@@ -240,8 +244,8 @@ module.exports.loop = function () {
     //empty the other source link
     var storageLink = Game.getObjectById(Memory.links.storageLink);
     //if storageLink can handle energy
-    if(storageLink.store.getFreeCapacity() > 100){
-        var links = myroom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink && i.id != Memory.links.storageLink})
+    if (storageLink.store.getFreeCapacity() > 100) {
+        var links = myRoom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink && i.id != Memory.links.storageLink })
         links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
         if (links[0].cooldown == 0) {
             switch (links[0].transferEnergy(storageLink)) {
@@ -256,9 +260,9 @@ module.exports.loop = function () {
     }
 
     //check ability to create new screep
-    if (myroom.energyAvailable > 200) {
+    if (myRoom.energyAvailable > 200) {
         //see if room has towers
-        var towers = myroom.find(FIND_STRUCTURES,
+        var towers = myRoom.find(FIND_STRUCTURES,
             {
                 filter: (structure) => structure.structureType == STRUCTURE_TOWER
                     && structure.energy < structure.energyCapacity
@@ -366,7 +370,7 @@ module.exports.loop = function () {
             //Builders
         } else if (miners.length < 1) {
             var newName = "miner" + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK,CARRY, CARRY, MOVE],
+            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE],
                 newName,
                 { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0) {
                 console.log("Spawning new miner: " + newName);
@@ -395,7 +399,7 @@ module.exports.loop = function () {
 
             var newName = 'handy' + Game.time;
             if (RTeam1.length < 3) {
-                if (myroom.energyAvailable > 400) {
+                if (myRoom.energyAvailable > 400) {
                     if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE,],
                         newName,
                         { memory: { role: 'repairer', team: 1 } }) == 0) {
@@ -423,7 +427,7 @@ module.exports.loop = function () {
 
             if (Game.spawns['HELL'].spawnCreep([MOVE, MOVE, MOVE, CLAIM, CARRY, WORK],
                 newName,
-                { memory: { role: 'settler', room: myroom } }) == 0) {
+                { memory: { role: 'settler', room: myRoom } }) == 0) {
                 console.log("spawning new settler: " + newName);
             }
             //Importers
@@ -457,7 +461,7 @@ module.exports.loop = function () {
         //check cpu stored
         console.log(Game.cpu.bucket + "/5000 new pixel");
         //check energy and creeps
-        console.log(myroom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
+        console.log(myRoom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
         //check roles
         console.log("Source Farmers: " + sourceFarmers.length +
             " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
@@ -481,3 +485,33 @@ module.exports.loop = function () {
     Game.cpu.generatePixel();
 }
 //you can use room.pos.find to get an array of structures in the room, filter it by those that have hits less than hitsMax, use the lodash sortBy feature to sort them by hits ... then send your repairers or towers after the first element in that array
+
+function clearMemory() {
+    for (var name in Memory.creeps) {
+        //clear dead creeps from memory
+        if (!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+    }
+}
+function sellRes(myRoom, res) {
+    //console.log(myRoom.terminal.cooldown)
+    if (myRoom.terminal.store[res] > 0 && myRoom.terminal.cooldown < 1) {
+        console.log(res + " exists")
+        buyUtrium = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
+        buyUtrium.sort((orderA, orderB) => orderB.price - orderA.price);
+        sellAmount = buyUtrium[0].remainingAmount;
+        if (buyUtrium[0].remainingAmount > myRoom.terminal.store[res]) {
+            sellAmount = myRoom.terminal.store[res];
+        }
+        console.log("Sold " + sellAmount + " Utrium at " + buyUtrium[0].price);
+        console.log(Game.market.deal(buyUtrium[0].id, sellAmount, myRoom.name));
+
+        Memory.test = buyUtrium[0]; // fast
+
+    }
+}
+function spawnCreep() {
+
+}
