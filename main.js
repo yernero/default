@@ -103,63 +103,8 @@ module.exports.loop = function () {
     //var myRoom = Game.rooms["W8S53"];
     //var ruin = Game.getObjectById('5f29b8885eb8e32fb300fa06');
 
-    var countCreeps = 0;
-    //run each role
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        countCreeps++;
-        switch (creep.memory.role) {
-            case "collector":
-                collectDead.run(creep);
-                break;
-            case "harvester":
-                roleHarvester.run(creep);
-                break;
-            case "builder":
-                roleBuilder.run(creep);
-                break;
-            case "upgrader":
-                roleUpgrader.run(creep);
-                break;
-            case "repairer":
-                //creep.memory.dest = false;
-                roleRepairer.run(creep);
-                break;
-            case "filler":
-                roleFiller.run(creep);
-                break;
-            case "scavenger":
-                roleDefender.run(creep)
-                break;
-            case "towerGuard":
-                towerGuard.run(creep)
-                break;
-            case "settler":
-                roleSettler.run(creep);
-                break;
-            case "importer":
-                roleImporter.run(creep);
-                break;
-            case "sourceFarmer":
-                roleSourceFarmer.run(creep);
-                break;
-            case "linkUpgrader":
-                roleLinkUpgrader.run(creep);
-                break;
-            case "linkFiller":
-                roleLinkFiller.run(creep);
-                break;
-            case "miner":
-                roleMiner.run(creep);
-                break;
-            default:
-                creep.memory.role = "sourceFarmer";
-                creep.memory.team = 0;
-                roleSourceFarmer.run(creep);
-                break;
-        }
-
-    }
+    var countCreeps =  runRoles();
+    //console.log(Object.keys(Game.creeps).length)
 
     //Look for enemies
     var redTarget = myRoom.find(FIND_HOSTILE_CREEPS);
@@ -511,6 +456,66 @@ function sellRes(myRoom, res) {
         Memory.test = buyUtrium[0]; // fast
 
     }
+}
+function runRoles(){
+    countCreeps = 0;
+      //run each role
+      for (var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        countCreeps++;
+        switch (creep.memory.role) {
+            case "collector":
+                collectDead.run(creep);
+                break;
+            case "harvester":
+                roleHarvester.run(creep);
+                break;
+            case "builder":
+                roleBuilder.run(creep);
+                break;
+            case "upgrader":
+                roleUpgrader.run(creep);
+                break;
+            case "repairer":
+                //creep.memory.dest = false;
+                roleRepairer.run(creep);
+                break;
+            case "filler":
+                roleFiller.run(creep);
+                break;
+            case "scavenger":
+                roleDefender.run(creep)
+                break;
+            case "towerGuard":
+                towerGuard.run(creep)
+                break;
+            case "settler":
+                roleSettler.run(creep);
+                break;
+            case "importer":
+                roleImporter.run(creep);
+                break;
+            case "sourceFarmer":
+                roleSourceFarmer.run(creep);
+                break;
+            case "linkUpgrader":
+                roleLinkUpgrader.run(creep);
+                break;
+            case "linkFiller":
+                roleLinkFiller.run(creep);
+                break;
+            case "miner":
+                roleMiner.run(creep);
+                break;
+            default:
+                creep.memory.role = "sourceFarmer";
+                creep.memory.team = 0;
+                roleSourceFarmer.run(creep);
+                break;
+        }
+
+    }
+    return countCreeps
 }
 function spawnCreep() {
 
