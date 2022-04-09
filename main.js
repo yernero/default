@@ -83,7 +83,8 @@ module.exports.loop = function () {
     Memory.test = {};
     Memory.test.room = myRoom.controller;
     //console.log(myRoom);
-
+    //var myRoom = Game.rooms["W8S53"];
+    //Game.getObjectById('5f29b8885eb8e32fb300fa06');
     if (Memory.sources == null) {
         Memory.sources = {};
         var sources = myRoom.find(FIND_SOURCES);
@@ -96,14 +97,7 @@ module.exports.loop = function () {
     sellRes(myRoom, RESOURCE_UTRIUM);
 
 
-
-
-
-
-    //var myRoom = Game.rooms["W8S53"];
-    //var ruin = Game.getObjectById('5f29b8885eb8e32fb300fa06');
-
-    var countCreeps =  runRoles();
+    var countCreeps = runRoles();
     //console.log(Object.keys(Game.creeps).length)
 
     //Look for enemies
@@ -246,13 +240,13 @@ module.exports.loop = function () {
 
             var newName = 'Link Filler' + Game.time;
             if (LFTeam0.length < 1) {
-                if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 0 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
                 }
             } else if (LFTeam1 < 1) {
-                if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 1 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
@@ -289,7 +283,7 @@ module.exports.loop = function () {
                 }
             } else {
                 if (containers.length > 1) {
-                    if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, CARRY, MOVE, MOVE],
+                    if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, CARRY, MOVE, MOVE],
                         newName,
                         { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
                         console.log('Spawning new harvester: ' + newName);
@@ -457,10 +451,10 @@ function sellRes(myRoom, res) {
 
     }
 }
-function runRoles(){
+function runRoles() {
     countCreeps = 0;
-      //run each role
-      for (var name in Game.creeps) {
+    //run each role
+    for (var name in Game.creeps) {
         var creep = Game.creeps[name];
         countCreeps++;
         switch (creep.memory.role) {
