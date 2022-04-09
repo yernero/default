@@ -6,11 +6,16 @@ var roleSourceFarmer = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-        //emptying energy 
         if (!creep.memory.team) {
             creep.memory.team = 0;
         }
-
+       /* if (!creep.memory.source){
+            var sources = creep.room.find(FIND_SOURCES);
+            if(creep.sources.length > team+1){
+                
+            }
+        }*/
+        //emptying energy 
         if (creep.memory.emptying) {
             //creep is empty so switch modes
             if (creep.store.energy == 0) {

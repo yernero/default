@@ -301,13 +301,13 @@ module.exports.loop = function () {
 
             var newName = 'Link Filler' + Game.time;
             if (LFTeam0.length < 1) {
-                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 0 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
                 }
             } else if (LFTeam1 < 1) {
-                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, MOVE],
+                if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 1 } }) == 0) {
                     console.log('Spawning new Link Filler: ' + newName);
@@ -344,7 +344,7 @@ module.exports.loop = function () {
                 }
             } else {
                 if (containers.length > 1) {
-                    if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
+                    if (Game.spawns['HELL'].spawnCreep([WORK,CARRY, CARRY, CARRY, MOVE, MOVE],
                         newName,
                         { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
                         console.log('Spawning new harvester: ' + newName);

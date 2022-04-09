@@ -18,6 +18,7 @@ var roleUpgrader = {
 				creep.memory.upgrading = false;
 				creep.say('⚡');
 			} else {
+				//console.log(creep);
 				//assign upgradeLink in memory
 				if (Memory.links.upgradeLink == null) {
 					var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
@@ -26,15 +27,28 @@ var roleUpgrader = {
 					links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
 					var upgradeLink = links[0];
 					Memory.links.upgradeLink = upgradeLink.id;
-				}
-			
-				//Try to upgrade, move closer if needed
-				if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(creep.room.controller,
-						{ visualizePathStyle: { stroke: '#ffaa00' } });
 				} else {
-					//console.log(creep.upgradeController(creep.room.controller));
+					switch (creep.upgradeController(creep.room.controller)) {
+						case 0:
+							break;
+						case -1:
+							console.log("not my controller")
+							break;
+						case -4:
+							break;
+						case -9:
+							creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#ffaa00' } });
+							break;
+						case -12:
+							creep.memory.role = "filler";
+						default:
+							console.log(creep.upgradeController(creep.room.controller));
+							console.log("Uknown error in Link Upgrader");
+							break;
+					}
+
 				}
+
 			}
 
 			//finding energy
