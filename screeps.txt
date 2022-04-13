@@ -1,5 +1,6 @@
 Screeps
 Main
+	create room in memory
 	Create links in memory
 	create repairs in memory
 	create storage in memory
