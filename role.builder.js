@@ -4,7 +4,21 @@ var roleBuilder = {
 	/** @param {Creep} creep **/
 	run: function (creep) {
 		//creep.memory.building =false;
+		var target = {};
+		if (Memory.constructionSites.all == null) {
+			if(creep.memory.site == null){
+
+			}
+			targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+			Memory.constructionSites.all = targets;
+		}
+		for (var site in Memory.constructionSites.all) {
+			if (site.progress == null) {
+				delete site;
+			}
+		}
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+	
 		//console.log(targets);
 		if (targets.length < 1) {
 			//console.log("repair");
@@ -52,7 +66,7 @@ var roleBuilder = {
 						}
 					} else {
 						//console.log(targets);
-							
+
 						if (!creep.memory.dest) {
 							creep.memory.dest = targets[0].id;
 						}

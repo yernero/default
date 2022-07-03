@@ -1,10 +1,27 @@
 var collectContainers = require("collect.containers");
+<<<<<<< Updated upstream
+=======
+var fillTerminals = require("fill.terminals");
+>>>>>>> Stashed changes
 var roleMiner = {
     /**@param {creep} creep **/
     run:function (creep){
         //console.log("miner location"  +creep.pos)
         //mining minerals in rooms
         if(creep.memory.mining){
+<<<<<<< Updated upstream
+=======
+            if(Memory.storage.mineStorage == null){
+                
+                var storage = creep.room.find(FIND_STRUCTURES,
+                    {filter: (i) => (i.structureType == STRUCTURE_CONTAINER
+                        ||i.structureType == STRUCTURE_STORAGE)});
+                storage.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+                console.log(storage[0]);
+
+                Memory.storage.mineStorage = storage[0].id;
+            }
+>>>>>>> Stashed changes
             //has free space
             if(creep.store.getFreeCapacity() > 0){
                 //console.log(creep.room.find(FIND_MINERALS))
@@ -52,6 +69,7 @@ var roleMiner = {
             //creep.drop(RESOURCE_ENERGY);
             //has materials
             if(creep.store.getUsedCapacity() >0){
+<<<<<<< Updated upstream
                 //Find Terminals
                 var terminals = creep.room.find(FIND_STRUCTURES,{filter: (i) => (i.structureType == STRUCTURE_TERMINAL)});
                 //console.log(terminals)
@@ -79,6 +97,9 @@ var roleMiner = {
                         console.log("unknown Error in miner transfer, investigate")
                         break;
                 }
+=======
+                fillTerminals.run(creep);
+>>>>>>> Stashed changes
             }else{//out of materials
                  //mine again
                  creep.memory.mining = true;
