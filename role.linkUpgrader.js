@@ -41,6 +41,7 @@ var roleUpgrader = {
 							break;
 						case -12:
 							creep.memory.role = "filler";
+							break;
 						default:
 							console.log(creep.upgradeController(creep.room.controller));
 							console.log("Uknown error in Link Upgrader");

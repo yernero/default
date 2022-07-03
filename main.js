@@ -13,88 +13,36 @@ var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
 var roleMiner = require("role.miner");
 var collectDead = require("role.miner");
-
+var findMyRoom = require("find.myRoom");
+var mgr = require("mgr");
+var myRoom;
 module.exports.loop = function () {
 
-
-    //declare memory variables
-    if (Memory.links == null) {
-        Memory.links = {};
+    mgr.createMem();
+    for (var t in Game.creeps) {
+        //console.log(t);
+        //console.log(Memory.creeps[t])
     }
-    if (Memory.repairs == null) {
-        Memory.repairs = {};
-    }
-    if (Memory.storage == null) {
-        Memory.storage = {};
-    }
-    if (Memory.constructionSites == null) {
-        Memory.constructionSites = {};
-    }
-    if (Memory.terminal == null) {
-        Memory.terminal = myRoom.terminal;
-    }
-    if (Memory.rooms == null || Memory.rooms.myRooms == null) {
-        Memory.rooms = {};
-        Memory.rooms.myRooms = {};
-    }
-
-    if (Memory.sources == null) {
-        Memory.sources = {};
-    }
-    var myRoom;
-
-    //checks if roomName is in memory
-    if (_.has(Memory.rooms, 'myRooms')) {
-        //If roomName is stored, convert into a room for myRoom
-        myRoom = Game.rooms[Memory.rooms.myRooms[0]];
-    } else {
-        //searches every room 
-        for (let key in Game.rooms) {
-            let room = Game.rooms[key]
-            //checks if room has a controller and is controlled by me
-            if (room.controller && room.controller.my) {
-                //stores room name
-                if (_.has(Memory, "rooms")) {
-                    if (_.has(Memory.rooms, "myRooms")) {
-                        var myRooms = Memory.rooms.myRooms;
-                        myRooms[0] = key;
-                        //console.log(Memory.rooms.myRooms[0]);
-                    } else {
-                        Memory.rooms.myRooms = {};
-                    }
-                } else {
-                    Memory.rooms = {};
-
-                }
-
-            }
-        }
-        //finds room and puts in myRoom without using memory
-        /*
-        for (let key in Game.rooms) {
-           let room = Game.rooms[key]
-           if (room.controller && room.controller.my) {
-               myRoom = room;
-               break;
-           }
-       }*/
-    }
+    //addArrayToMem();
+    
+    myRoom = findMyRoom.run();
     //console.log("room" +myRoom);
     Memory.test = {};
     Memory.test.room = myRoom.controller;
     //console.log(myRoom);
     //var myRoom = Game.rooms["W8S53"];
     //Game.getObjectById('5f29b8885eb8e32fb300fa06');
-    if (Memory.sources == null) {
-        Memory.sources = {};
-        var sources = myRoom.find(FIND_SOURCES);
-        for (let i = 0; i < sources.length; i++) {
-            Memory.sources.i = sources[i].id;
-        }
-
-    }
+   
     clearMemory();
+    //start code
+    if(myRoom.energyAvailable <= 300){
+
+    }else if(myRoom.energyAvailable > 300 && )
     sellRes(myRoom, RESOURCE_UTRIUM);
+    if (myRoom.terminal.store.getFreeCapacity() < 5000) {
+        sellRes(myRoom, RESOURCE_ENERGY);
+    }
+
 
 
     var countCreeps = runRoles();
@@ -199,6 +147,26 @@ module.exports.loop = function () {
     }
 
     //check ability to create new screep
+    //going well code
+    if (myRoom.energyAvailable > 500) {
+        if (linkFillers.length < 3) {
+
+            var newName = 'Link Filler' + Game.time;
+            var status = Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE], newName, { memory: { role: "linkFiller", team: 0 } });
+            //console.log(status)
+            switch (status) {
+                case 0:
+
+                    break;
+                default:
+                    console.log("Error spawning super linkFiller")
+            }
+        }
+
+    }
+
+    //console.log(myRoom.energyAvailable);
+    //starting code
     if (myRoom.energyAvailable > 200) {
         //see if room has towers
         var towers = myRoom.find(FIND_STRUCTURES,
@@ -239,20 +207,18 @@ module.exports.loop = function () {
         } else if (linkFillers.length < 2) {
 
             var newName = 'Link Filler' + Game.time;
-            if (LFTeam0.length < 1) {
+            if (LFTeam0.length < 2) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 0 } }) == 0) {
-                    console.log('Spawning new Link Filler: ' + newName);
                 }
             } else if (LFTeam1 < 1) {
                 if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
                     newName,
                     { memory: { role: 'linkFiller', storing: false, team: 1 } }) == 0) {
-                    console.log('Spawning new Link Filler: ' + newName);
                 }
             }
-
+            console.log('Spawning new Link Filler: ' + newName);
 
         } else if (sourceFarmers.length < 7) {
             var newName = 'sourceFarmer' + Game.time;
@@ -314,7 +280,7 @@ module.exports.loop = function () {
                 { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0) {
                 console.log("Spawning new miner: " + newName);
             }
-        } else if (builders.length < 8) {
+        } else if (builders.length < 4) {
 
             var newName = "Bob" + Game.time;
             //team 0
@@ -434,7 +400,7 @@ function clearMemory() {
         }
     }
 }
-function sellRes(myRoom, res) {
+function sellRes(res) {
     //console.log(myRoom.terminal.cooldown)
     if (myRoom.terminal.store[res] > 0 && myRoom.terminal.cooldown < 1) {
         console.log(res + " exists")
@@ -514,3 +480,4 @@ function runRoles() {
 function spawnCreep() {
 
 }
+
