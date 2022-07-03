@@ -2,6 +2,7 @@ var roleUpgrader = require("role.upgrader");
 var collectSources = require("collect.sources");
 var collectContainers = require("collect.containers");
 var fillLinks = require("fill.links");
+var fillTerms = require("fill.terminals");
 var collectLinks = require("collect.links");
 var fillContainers = require("fill.containers");
 var roleFiller = {
@@ -47,9 +48,10 @@ var roleFiller = {
 				
 				switch (creep.memory.team) {
 
-					case 0:
-						//Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
+					case 1:
+						console.log("im special")
 
+					case 0:
 						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 						//var linkToFill = Game.getObjectById(creep.memory.link);
 						//console.log(link)
@@ -57,24 +59,20 @@ var roleFiller = {
 						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
 							fillLinks.run(creep);
 						} else {
-							fillContainers.run(creep);
+							creep.memory.mineral = RESOURCE_ENERGY;
+							fillTerms.run(creep);
 						}
-						break;
-
-					case 1:
-						fillLinks.run(creep);
-
-						break;
 
 					default:
 						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 						//var linkToFill = Game.getObjectById(creep.memory.link);
 						//console.log(link)
 
-						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 700) {
+						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
 							fillLinks.run(creep);
 						} else {
-							fillContainers.run(creep);
+							creep.memory.mineral = RESOURCE_ENERGY;
+							fillTerms.run(creep);
 						}
 						break;
 				}
@@ -90,27 +88,26 @@ var roleFiller = {
 				creep.say('🧪');
 			} else {
 				switch (creep.memory.team) {
+					case 1:
+						console.log("Im Special")
+						
+					
+
 					case 0:
+				
+
+					default:
 
 						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 
 						//console.log(upgradeLink);
+						//if link is not full grab from container
 						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 100) {
 							collectContainers.run(creep);
 						} else {
 							console.log("Excess Energy")
 							collectLinks.run(creep);
 						}
-						break;
-
-					case 1:
-						collectContainers.run(creep);
-
-						break;
-
-					default:
-
-
 				}
 
 
