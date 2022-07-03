@@ -37,7 +37,9 @@ module.exports.loop = function () {
     //start code
     if(myRoom.energyAvailable <= 300){
 
-    }else if(myRoom.energyAvailable > 300 && )
+    }else if(myRoom.energyAvailable > 300){
+
+    }
     sellRes(myRoom, RESOURCE_UTRIUM);
     if (myRoom.terminal.store.getFreeCapacity() < 5000) {
         sellRes(myRoom, RESOURCE_ENERGY);
