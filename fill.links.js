@@ -6,6 +6,7 @@ var fillLinks = {
         //creep must already have a link defined in memory
         if (creep.memory.link == null) {
             console.log(creep.name + " needs a link");
+            
         } else {
             var link = Game.getObjectById(creep.memory.link);
             // console.log(Game.getObjectById(creep.memory.link));

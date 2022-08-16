@@ -5,7 +5,7 @@ var roleUpgrader = {
 	run: function (creep) {
 		//check if links exist
 		var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
-		if (links.length > 1) {
+		if (links.length > 1 && creep.memory.role === "upgrader") {
 			//if less than 2 links in a room, become a regular upgrader
 			creep.memory.role = "linkUpgrader";
 		}

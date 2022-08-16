@@ -12,92 +12,47 @@ var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
 var roleMiner = require("role.miner");
-var collectDead = require("role.miner");
-
+var findMyRoom = require("find.myRoom");
+var mgr = require("mgr");
+var displayer = require("displayer");
+var myRoom;
 module.exports.loop = function () {
+    myRoom = findMyRoom.run();
 
 
-    //declare memory variables
-    if (Memory.links == null) {
-        Memory.links = {};
-    }
-    if (Memory.repairs == null) {
-        Memory.repairs = {};
-    }
-    if (Memory.storage == null) {
-        Memory.storage = {};
-    }
-    if (Memory.constructionSites == null) {
-        Memory.constructionSites = {};
-    }
-    if (Memory.terminal == null) {
-        Memory.terminal = myRoom.terminal;
-    }
-    if (Memory.rooms == null || Memory.rooms.myRooms == null) {
-        Memory.rooms = {};
-        Memory.rooms.myRooms = {};
-    }
+    // console.log("test: " + (Game.getObjectById(Memory[myRoom.name].spawns[0].id)) );
 
-    if (Memory.sources == null) {
-        Memory.sources = {};
+    mgr.createMem(myRoom);
+    if (Game.time % 1 == 0) {
+        displayer.displayStats(myRoom);
     }
-    var myRoom;
-
-    //checks if roomName is in memory
-    if (_.has(Memory.rooms, 'myRooms')) {
-        //If roomName is stored, convert into a room for myRoom
-        myRoom = Game.rooms[Memory.rooms.myRooms[0]];
-    } else {
-        //searches every room 
-        for (let key in Game.rooms) {
-            let room = Game.rooms[key]
-            //checks if room has a controller and is controlled by me
-            if (room.controller && room.controller.my) {
-                //stores room name
-                if (_.has(Memory, "rooms")) {
-                    if (_.has(Memory.rooms, "myRooms")) {
-                        var myRooms = Memory.rooms.myRooms;
-                        myRooms[0] = key;
-                        //console.log(Memory.rooms.myRooms[0]);
-                    } else {
-                        Memory.rooms.myRooms = {};
-                    }
-                } else {
-                    Memory.rooms = {};
-
-                }
-
-            }
-        }
-        //finds room and puts in myRoom without using memory
-        /*
-        for (let key in Game.rooms) {
-           let room = Game.rooms[key]
-           if (room.controller && room.controller.my) {
-               myRoom = room;
-               break;
-           }
-       }*/
+    //mgr.updateCreepMem(myRoom);
+    for (var t in Game.creeps) {
+        //console.log(t);
+        //console.log(Memory.creeps[t])
     }
+    //addArrayToMem();
+
     //console.log("room" +myRoom);
     Memory.test = {};
     Memory.test.room = myRoom.controller;
     //console.log(myRoom);
     //var myRoom = Game.rooms["W8S53"];
     //Game.getObjectById('5f29b8885eb8e32fb300fa06');
-    if (Memory.sources == null) {
-        Memory.sources = {};
-        var sources = myRoom.find(FIND_SOURCES);
-        for (let i = 0; i < sources.length; i++) {
-            Memory.sources.i = sources[i].id;
-        }
+
+    //start code
+    if (myRoom.energyAvailable <= 300) {
+
+    } else if (myRoom.energyAvailable > 300) {
 
     }
-    clearMemory();
-    sellRes(myRoom, RESOURCE_UTRIUM);
+    if (myRoom.controller.level == 8) {
+        // console.log("yoooooo")
+    }
 
 
-    var countCreeps = runRoles();
+    var countCreeps = mgr.runRoles(myRoom);
+    //var countCreeps = runRoles();
     //console.log(Object.keys(Game.creeps).length)
 
     //Look for enemies
@@ -122,30 +77,10 @@ module.exports.loop = function () {
     Memory.repairs.toBeRepaired = targets;
     Memory.repairs.toBeRepairedContainers = containers;
 
-    //TODO
-    //consider calculating this once and changing only when a new creep is made
-    //Roles
-    var fillers = _.filter(Game.creeps, (creep) => creep.memory.role == "filler");
-    var linkFillers = _.filter(Game.creeps, (creep) => creep.memory.role == "linkFiller");
-    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    var upgraders = _.filter(Game.creeps, (creep) => (creep.memory.role == 'upgrader' || creep.memory.role == 'linkUpgrader'));
-    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
-    var settlers = _.filter(Game.creeps, (creep) => creep.memory.role == "settler");
-    var importers = _.filter(Game.creeps, (creep) => creep.memory.role == "importer");
-    var towerGuards = _.filter(Game.creeps, (creep) => creep.memory.role == "towerGuard");
-    var sourceFarmers = _.filter(Game.creeps, (creep) => creep.memory.role == "sourceFarmer");
-    var miners = _.filter(Game.creeps, (creep) => creep.memory.role == "miner");
-    //Teams
-    var Hteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "harvester");
-    var Bteam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "builder");
-    var sfTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "sourceFarmer")
-    var sfTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "sourceFarmer")
-    var RTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "repairer")
-    var RTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "repairer")
-    var LFTeam0 = _.filter(Game.creeps, (creep) => creep.memory.team == 0 && creep.memory.role == "linkFiller");
-    var LFTeam1 = _.filter(Game.creeps, (creep) => creep.memory.team == 1 && creep.memory.role == "linkFiller");
 
+
+
+   
     //console.log(Game.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity}}));
     var containers = myRoom.find(FIND_STRUCTURES, {
         filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
@@ -169,14 +104,17 @@ module.exports.loop = function () {
         links.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
         //console.log(links);
         //check if link[0] can send energy
-        if (links[0].cooldown == 0) {
+        if (links[0].cooldown == 0 && links[0].store[RESOURCE_ENERGY] > 200) {
             switch (links[0].transferEnergy(upgradeLink)) {
                 case 0:
                     //do nothing
                     break;
+                case -6:
+                    console.log(links[0] + " is empty")
+                    break;
                 default:
                     //idk what happened
-                    console.log(links[0].transferEnergy(upgradeLink));
+                    console.log("Tried to fill upgradeLink " + links[0].transferEnergy(upgradeLink));
             }
         }
     }
@@ -199,188 +137,111 @@ module.exports.loop = function () {
     }
 
     //check ability to create new screep
+    //going well code
+    if (myRoom.energyAvailable > 500) {
+        if (linkFillers0 < 2) {
+            mgr.spawnCreep("linkFiller", 2, myRoom, 0);
+        }
+
+    }
+
+
+    //Roles
+    var towerGuards = Memory[myRoom.name].creeps["towerGuard_0"];
+
+    var fillers0 = Memory[myRoom.name].creeps["filler_0"];
+    var fillers1 = Memory[myRoom.name].creeps["filler_1"];
+    //console.log(fillers0 + " "+ fillers1)
+
+
+    var sourceFarmers0 = Memory[myRoom.name].creeps["sourceFarmer_0"];
+    var sourceFarmers1 = Memory[myRoom.name].creeps["sourceFarmer_1"];
+    //console.log(sourceFarmers0 + " "+ sourceFarmers1)
+
+    var linkFillers0 = Memory[myRoom.name].creeps["linkFiller_0"];
+    //console.log(linkFillers0);
+
+    var harvesters0 = Memory[myRoom.name].creeps["harvester_0"];
+    var harvesters1 = Memory[myRoom.name].creeps["harvester_1"];
+    //console.log(harvesters1 + " " + harvesters0)
+
+    var upgraders0 = Memory[myRoom.name].creeps["upgrader_0"];
+    var linkUpgraders0 = Memory[myRoom.name].creeps["linkUpgrader_0"];
+    //console.log(upgraders0 + " " + linkUpgraders0)
+
+    var miners0 = Memory[myRoom.name].creeps["miner_0"];
+    //console.log(miners0)
+
+    var builders0 = Memory[myRoom.name].creeps["builder_0"];
+    var builders1 = Memory[myRoom.name].creeps["builder_1"];
+    //console.log(builders0 + " " + builders1);
+
+    var repairers0 = Memory[myRoom.name].creeps["repairer_0"];
+    var repairers1 = Memory[myRoom.name].creeps["repairer_1"];
+    //console.log(repairers0 + " " + repairers1);
+
+    var settlers0 = Memory[myRoom.name].creeps["settler_0"];
+
+    var importers0 = Memory[myRoom.name].creeps["importer_0"];
+
+
+
+    //console.log(myRoom.energyAvailable);
+    //creating new creeps
     if (myRoom.energyAvailable > 200) {
         //see if room has towers
         var towers = myRoom.find(FIND_STRUCTURES,
             {
                 filter: (structure) => structure.structureType == STRUCTURE_TOWER
-                    && structure.energy < structure.energyCapacity
+                    && structure.store[RESOURCE_ENERGY] < structure.store.getCapacity(RESOURCE_ENERGY) / 2
             });
         //console.log("Towers: " + towers.length);
 
         //if room has towers, and no tower guard
-
-        if (towers.length > 0 && towerGuards < 1) {
-            //create a towerguard
-            var newName = 'Tower Guard ' + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE, TOUGH, TOUGH, ATTACK],
-                newName,
-                { memory: { role: 'towerGuard' } }) == 0) {
-                console.log('Spawning new Guard: ' + newName);
+        //console.log(Memory[myRoom.name].creeps["filler_0"])
+        if (towers.length > 0 && towerGuards < 1) {//tower Guards
+            mgr.spawnCreep("towerGuard", 0, myRoom, 0);
+        } else if (fillers1 + fillers0 < 3) {//fillers
+            if (containers.length < 1) {//0
+                mgr.spawnCreep("filler", 0, myRoom, 0);
+            } else {//1
+                mgr.spawnCreep("filler", 1, myRoom, 0);
             }
-            //Fillers
-        } else if (fillers.length < 3) {
-
-            var newName = 'Filler' + Game.time;
-            if (containers.length < 1) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'filler', storing: false } }) == 0) {
-                    console.log('Spawning new Filler: ' + newName);
-                }
-            } else {
-                if (Game.spawns['HELL'].spawnCreep([CARRY, CARRY, CARRY, MOVE, MOVE],
-                    newName,
-                    { memory: { role: 'filler', storing: false } }) == 0) {
-                    console.log('Spawning new Filler: ' + newName);
-                }
+        } else if (sourceFarmers0 + sourceFarmers1 < 7) {//source farmers
+            if (sourceFarmers0 < 4) {//0
+                mgr.spawnCreep("sourceFarmer", 0, myRoom, 0);
+            } else if (sourceFarmers1 < 3) {//1
+                mgr.spawnCreep("sourceFarmer", 1, myRoom, 0);
             }
-
-        } else if (linkFillers.length < 2) {
-
-            var newName = 'Link Filler' + Game.time;
-            if (LFTeam0.length < 1) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'linkFiller', storing: false, team: 0 } }) == 0) {
-                    console.log('Spawning new Link Filler: ' + newName);
-                }
-            } else if (LFTeam1 < 1) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'linkFiller', storing: false, team: 1 } }) == 0) {
-                    console.log('Spawning new Link Filler: ' + newName);
-                }
-            }
-
-
-        } else if (sourceFarmers.length < 7) {
-            var newName = 'sourceFarmer' + Game.time;
-            if (sfTeam0.length < 4) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'sourceFarmer', emptying: false, team: 0 } }) == 0) {
-                    console.log('Spawning new Source Farmer: ' + newName);
-
-                }
-
-            } else if (sfTeam1.length < 3) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'sourceFarmer', emptying: false, team: 1 } }) == 0) {
-                    console.log('Spawning new Source Farmer: ' + newName);
-                }
-            }
-            //Harvesters
-        } else if (harvesters.length < 1) {
-            var newName = 'Harvester' + Game.time;
-            //create teams 0 and 1
-            if (Hteam1.length < 0) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'harvester', storing: false, team: 1 } }) == 0) {
-                    console.log('Spawning new harvester: ' + newName);
-                }
-            } else {
+        } else if (linkFillers0 < 1) {//link fillers
+            mgr.spawnCreep("linkFiller", 0, myRoom, 0);
+        } else if (harvesters0 + harvesters1 < 1) {//Harvesters
+            if (harvesters1 && harvesters1 < 0) {//1
+                mgr.spawnCreep("harvester", 1, myRoom, 0);
+            } else {//0
                 if (containers.length > 1) {
-                    if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, CARRY, MOVE, MOVE],
-                        newName,
-                        { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
-                        console.log('Spawning new harvester: ' + newName);
-                    }
+                    mgr.spawnCreep("harvester", 0, myRoom, 0);
                 } else {
-                    if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, MOVE],
-                        newName,
-                        { memory: { role: 'harvester', storing: false, team: 0 } }) == 0) {
-                        console.log('Spawning new harvester: ' + newName);
-                    }
-                }
-
-            }
-            //Upgraders
-        } else if (upgraders.length < 6) {
-
-            var newName = "uppity" + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                newName,
-                { memory: { role: 'linkUpgrader', upgrading: false, team: 0 } }) == 0) {
-                console.log("Spawning new uppity: " + newName);
-            }
-            //Builders
-        } else if (miners.length < 1) {
-            var newName = "miner" + Game.time;
-            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, WORK, CARRY, CARRY, MOVE],
-                newName,
-                { memory: { role: 'miner', upgrading: false, team: 0 } }) == 0) {
-                console.log("Spawning new miner: " + newName);
-            }
-        } else if (builders.length < 8) {
-
-            var newName = "Bob" + Game.time;
-            //team 0
-            if (Bteam1.length > 3) {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, WORK, MOVE],
-                    newName,
-                    { memory: { role: 'builder', building: false, team: 0 } }) == 0) {
-                    console.log("Spawning new bob the builder: " + newName);
-                }
-                //team 1
-            } else {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE],
-                    newName,
-                    { memory: { role: 'builder', team: 1 } }) == 0) {
-                    console.log("Spawning new bob the builder: " + newName);
-                }
-                //team: 1
-            }
-            //Handys / Repairers
-        } else if (repairers.length < 5) {
-
-            var newName = 'handy' + Game.time;
-            if (RTeam1.length < 3) {
-                if (myRoom.energyAvailable > 400) {
-                    if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE,],
-                        newName,
-                        { memory: { role: 'repairer', team: 1 } }) == 0) {
-                        console.log('Spawning new handy: ' + newName);
-                    }
-                } else {
-                    if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
-                        newName,
-                        { memory: { role: 'repairer', team: 1 } }) == 0) {
-                        console.log('Spawning new handy: ' + newName);
-                    }
-                }
-
-            } else {
-                if (Game.spawns['HELL'].spawnCreep([WORK, CARRY, CARRY, MOVE,],
-                    newName,
-                    { memory: { role: 'repairer', team: 0 } }) == 0) {
-                    console.log('Spawning new handy: ' + newName);
+                    mgr.spawnCreep("harvester", 0, myRoom, 0);
                 }
             }
-            //Settlers
-        } else if (settlers.length < 0) {
-
-            var newName = "columbus" + Game.time;
-
-            if (Game.spawns['HELL'].spawnCreep([MOVE, MOVE, MOVE, CLAIM, CARRY, WORK],
-                newName,
-                { memory: { role: 'settler', room: myRoom } }) == 0) {
-                console.log("spawning new settler: " + newName);
-            }
-            //Importers
-        } else if (importers.length < 0) {
-
-            var newName = "import" + Game.time;
-
-            if (Game.spawns['HELL'].spawnCreep([WORK, WORK, CARRY, CARRY, MOVE, MOVE],
-                newName,
-                { memory: { role: 'importer' } }) == 0) {
-                console.log("Spawning new importer: " + newName);
-
-            }
-
+        } else if ((upgraders0 && upgraders0 < 6) ||
+            (linkUpgraders0 && linkUpgraders0 < 6)) {//Upgraders
+            mgr.spawnCreep("upgrader", 0, myRoom, 0)//0
+        } else if (miners0 < 1) {//Miners
+            mgr.spawnCreep("miner", 0, myRoom, 0);//0
+        } else if (builders1 < 3) {
+            mgr.spawnCreep("builder", 1, myRoom, 0);
+        } else if (builders0 < 1) {
+            mgr.spawnCreep("builder", 0, myRoom, 0);
+        } else if (repairers1 < 3) {//repairers 1
+            mgr.spawnCreep("repairer", 0, myRoom, 0)
+        } else if (repairers0 < 2) {
+            mgr.spawnCreep("repairer", 1, myRoom, 0);
+        } else if (settlers0 < 0) {//Settlers
+            mgr.spawnCreep("settler", 0, myRoom, 0)
+        } else if (importers0 < 0) {//Importers
+            mgr.spawnCreep("importer", 0, myRoom, 0)
         }
     }
 
@@ -394,123 +255,17 @@ module.exports.loop = function () {
             { align: 'left', opacity: 0.8 }
         );
     }
-    //Display data
-    if (Game.time % 5 == 0) {
-        console.log('\n\n\n----------------------------------------------');
-        //check cpu stored
-        console.log(Game.cpu.bucket + "/5000 new pixel");
-        //check energy and creeps
-        console.log(myRoom.energyAvailable + " at " + Game.time + " with " + countCreeps + "/20 creeps");
-        //check roles
-        console.log("Source Farmers: " + sourceFarmers.length +
-            " T0: " + sfTeam0.length + " T1: " + sfTeam1.length +
-            "\tFillers: " + fillers.length +
-            "\tLink Fillers: " + linkFillers.length +
-            '\tHarvesters: ' + harvesters.length +
-            " T0: " + Hteam1.length + " T1: " + Hteam1.length +
-            "\tTower Guards: " + towerGuards.length +
-            '\tUpgraders: ' + upgraders.length + "\n" +
-            '\Builders: ' + builders.length +
-            " T0: " + Bteam1.length + " T1: " + Bteam1.length +
-            '\tRepairers: ' + repairers.length +
-            " T0: " + RTeam0.length + " T1: " + RTeam1.length +
-            "\tSettlers: " + settlers.length +
-            "\tImports: " + importers.length);
-        //check teams
-        console.log("Team 1 Harvesters: " + Hteam1.length + " Miners : " + miners.length);
-        //Game.spawns['a'].spawnCreep([WORK,CARRY,CARRY,MOVE], "towerGuard",{memory: {role: 'towerGuard'}});
-        console.log("----------------------------------------------")
-    }
+
     Game.cpu.generatePixel();
+    //end of main loop
 }
+
+
+
+
 //you can use room.pos.find to get an array of structures in the room, filter it by those that have hits less than hitsMax, use the lodash sortBy feature to sort them by hits ... then send your repairers or towers after the first element in that array
 
-function clearMemory() {
-    for (var name in Memory.creeps) {
-        //clear dead creeps from memory
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
-}
-function sellRes(myRoom, res) {
-    //console.log(myRoom.terminal.cooldown)
-    if (myRoom.terminal.store[res] > 0 && myRoom.terminal.cooldown < 1) {
-        console.log(res + " exists")
-        buyUtrium = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
-        buyUtrium.sort((orderA, orderB) => orderB.price - orderA.price);
-        sellAmount = buyUtrium[0].remainingAmount;
-        if (buyUtrium[0].remainingAmount > myRoom.terminal.store[res]) {
-            sellAmount = myRoom.terminal.store[res];
-        }
-        console.log("Sold " + sellAmount + " Utrium at " + buyUtrium[0].price);
-        console.log(Game.market.deal(buyUtrium[0].id, sellAmount, myRoom.name));
-
-        Memory.test = buyUtrium[0]; // fast
-
-    }
-}
-function runRoles() {
-    countCreeps = 0;
-    //run each role
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        countCreeps++;
-        switch (creep.memory.role) {
-            case "collector":
-                collectDead.run(creep);
-                break;
-            case "harvester":
-                roleHarvester.run(creep);
-                break;
-            case "builder":
-                roleBuilder.run(creep);
-                break;
-            case "upgrader":
-                roleUpgrader.run(creep);
-                break;
-            case "repairer":
-                //creep.memory.dest = false;
-                roleRepairer.run(creep);
-                break;
-            case "filler":
-                roleFiller.run(creep);
-                break;
-            case "scavenger":
-                roleDefender.run(creep)
-                break;
-            case "towerGuard":
-                towerGuard.run(creep)
-                break;
-            case "settler":
-                roleSettler.run(creep);
-                break;
-            case "importer":
-                roleImporter.run(creep);
-                break;
-            case "sourceFarmer":
-                roleSourceFarmer.run(creep);
-                break;
-            case "linkUpgrader":
-                roleLinkUpgrader.run(creep);
-                break;
-            case "linkFiller":
-                roleLinkFiller.run(creep);
-                break;
-            case "miner":
-                roleMiner.run(creep);
-                break;
-            default:
-                creep.memory.role = "sourceFarmer";
-                creep.memory.team = 0;
-                roleSourceFarmer.run(creep);
-                break;
-        }
-
-    }
-    return countCreeps
-}
 function spawnCreep() {
 
 }
+
