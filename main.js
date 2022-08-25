@@ -23,7 +23,7 @@ module.exports.loop = function () {
     //creates memory for all rooms owned
     memMgr.createRoomsMem();
     //creates memory for all creeps
-    memMgr.createCreepMem();
+    //memMgr.createCreepMem();
     memMgr.updateCreepMem();
 
     //mgr.createMem("outside");
@@ -32,27 +32,21 @@ module.exports.loop = function () {
         //displayer.displayStats(myRoom);
     }
     //myRoom = findMyRoom.run();
-    //console.log(myRoom)
-    var myRoom = Game.rooms["W8S53"];
-
     //console.log("room" +myRoom);
-    Memory.test = {};
-    Memory.test.room = myRoom.controller;
-    //console.log(myRoom);
 
-    //Game.getObjectById('5f29b8885eb8e32fb300fa06');
+    var myRoom = Game.rooms["W8S53"];
+    //console.log("room" +myRoom);
 
-    //start code
-    if (myRoom.energyAvailable <= 300) {
 
-    } else if (myRoom.energyAvailable > 300) {
+    //TODO convert mgr.runRoles into a method that runs roles for every room
+
+    for (let roomName in Game.rooms) {
+        let room = Game.rooms[roomName];
+        mgr.runRoles(room);
 
     }
-    if (myRoom.controller.level == 8) {
-        // console.log("yoooooo")
-    }
 
-    var countCreeps = mgr.runRoles(myRoom);
+
     //var countCreeps = runRoles();
     //console.log(Object.keys(Game.creeps).length)
 
@@ -141,7 +135,7 @@ module.exports.loop = function () {
     //going well code
     if (myRoom.energyAvailable > 500) {
         if (linkFillers0 < 2) {
-          //  mgr.spawnCreep("linkFiller", 0, myRoom, 0);
+            //  mgr.spawnCreep("linkFiller", 0, myRoom, 0);
         }
 
     }

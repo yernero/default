@@ -97,7 +97,7 @@ var memMgr = {
         for (let roomName in Game.rooms) {
             let room = Game.rooms[roomName];
             Memory[roomName].creeps = {};
-            Memory[roomName].creeps.Total = 0;
+            Memory[roomName].creeps.total = 0;
         }
     }
     ,
@@ -120,7 +120,7 @@ var memMgr = {
                 var room = creep.room.name;
                 //console.log(creep.room)
                 
-                Memory[room].creeps.Total++
+                Memory[room].creeps.total++
                 if (!Memory[room].creeps[type]) {
                     Memory[room].creeps[type] = 1;
                 } else {

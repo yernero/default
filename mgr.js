@@ -166,6 +166,7 @@ var mgr = {
         }
     }
     , clearMemory: function () {
+        //Consider using this method instead of resetting memory every mem update
         for (var name in Memory.creeps) {
             //clear dead creeps from memory
             if (!Game.creeps[name]) {
@@ -177,7 +178,6 @@ var mgr = {
     }
     ,
     runRoles: function (myRoom) {
-        countCreeps = 0;
         //run each role
         for (var name in Game.creeps) {
             var creep = Game.creeps[name];
@@ -186,7 +186,6 @@ var mgr = {
 
                 //room creeps
                 if (creep.room == myRoom) {
-                    countCreeps++;
                     switch (creep.memory.role) {
                         case "settler":
                             roleSettler.run(creep);
@@ -283,7 +282,6 @@ var mgr = {
 
 
         }
-        return countCreeps
     }
     ,
     findStorage: function (myRoom) {
