@@ -45,6 +45,7 @@ var roleFiller = {
 				creep.say('⚡');
 			} else {
 				//console.log(creep.pos)
+				var myRoom = Game.rooms["W8S53"];
 
 				switch (creep.memory.team) {
 
@@ -56,10 +57,10 @@ var roleFiller = {
 
 						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 500) {
 							fillLinks.run(creep);
-						} else if(myRoom.terminal && myRoom.terminal.store.getUsedCapacity(RESOURCE_ENERGY) <45000){
+						} else if (myRoom.terminal && myRoom.terminal.store.getUsedCapacity(RESOURCE_ENERGY) < 45000) {
 							creep.memory.mineral = RESOURCE_ENERGY;
 							fillTerms.run(creep);
-						}else{
+						} else {
 							creep.memory.mineral = RESOURCE_ENERGY;
 							fillContainers.run(creep);
 						}

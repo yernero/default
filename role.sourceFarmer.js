@@ -30,7 +30,7 @@ var roleSourceFarmer = {
                    //creep.memory.link = links[0].id;
                 if(!creep.memory.link){
                    console.log("setting link for " + creep.name);
-                   var links = myRoom.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
+                   var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK && i.id != Memory.links.upgradeLink })
                    links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
                 
                      creep.memory.link = links[0].id;

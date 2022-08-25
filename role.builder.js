@@ -4,21 +4,35 @@ var roleBuilder = {
 	/** @param {Creep} creep **/
 	run: function (creep) {
 		//creep.memory.building =false;
+		var roomName = creep.room.name;
 		var target = {};
-		if (Memory.constructionSites.all == null) {
-			if(creep.memory.site == null){
+		if (true && !Memory[roomName].constructionSites.all) {
+			//console.log("no construction sites")
+			if (creep.memory.site == null) {
 
 			}
+			//	console.log("assign construction")
+
 			targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-			Memory.constructionSites.all = targets;
+			//console.log("setting construction sites " + targets)
+			Memory[roomName].constructionSites.all = targets;
+			//console.log(Memory[roomName].constructionSites.all)
 		}
-		for (var site in Memory.constructionSites.all) {
-			if (site.progress == null) {
-				delete site;
+		for (var site in Memory[roomName].constructionSites.all) {
+			//console.log(site + " " + Memory[roomName].constructionSites.all[site])
+			
+			if(Memory[roomName].constructionSites.all[site]){
+				var thisSite = Memory[roomName].constructionSites.all[site]
+			}
+			//console.log(!Game.getObjectById(thisSite.id));
+			//console.log(thisSite.progress == null)
+			if (!thisSite  ||!Game.getObjectById(thisSite.id)|| thisSite.progress == null ) {
+				delete Memory[roomName].constructionSites.all;
+				console.log("deleting a construction site from memory")
 			}
 		}
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-	
+
 		//console.log(targets);
 		if (targets.length < 1) {
 			//console.log("repair");
