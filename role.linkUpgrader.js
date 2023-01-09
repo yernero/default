@@ -1,15 +1,21 @@
 var collectLinks = require("collect.links");
+var collectContainers = require("collect.containers")
+var linksMgr = require("mgr.links");
 var roleUpgrader = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
+		var room = creep.room;
+		var roomName = room.name;
 		//check if links exist
-		var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
+		//var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
+		var links = linksMgr.findLinksInRoom(room);
+		//console.log( roomName + " " + links)
 		if (links.length < 2) {
 			//if less than 2 links in a room, become a regular upgrader
 			creep.memory.role = "upgrader";
 		} else {
-			creep.memory.link = Memory.links.upgradeLink;
+			//console.log(Memory[roomName].links.upgradeLink)
 		}
 		//Upgrading Controller
 		if (creep.memory.upgrading) {
@@ -18,31 +24,21 @@ var roleUpgrader = {
 				creep.memory.upgrading = false;
 				creep.say('⚡');
 			} else {
-<<<<<<< Updated upstream
-				var links = creep.room.find(FIND_STRUCTURES,{filter: (i) => i.structureType == STRUCTURE_LINK})
-				//console.log(links);
-				//sort by closest
-				links.sort((a,b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b) );
-				var upgradeLink = links[0];
-				Memory.links.upgradeLink =  upgradeLink.id;
-				//Try to upgrade, move closer if needed
-				if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(creep.room.controller,
-						{ visualizePathStyle: { stroke: '#ffaa00' } });
-=======
 				//console.log(creep);
+				//console.log(links.length)
 				//assign upgradeLink in memory
-				if (Memory.links.upgradeLink == null) {
-					var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
-					//console.log(links);
+				if (links.length > 2 && (Memory[roomName].links.upgradeLink == null || Memory[roomName].links.upgradeLink == -1)) {
+					//var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
+					//console.log(roomName + " " + links);
 					//sort by closest
-					links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
-					var upgradeLink = links[0];
-					Memory.links.upgradeLink = upgradeLink.id;
->>>>>>> Stashed changes
+					this.setUpgradeLink(links, creep, roomName)
 				} else {
 					switch (creep.upgradeController(creep.room.controller)) {
 						case 0:
+							if (links.length > 1 && (Memory[roomName].links.upgradeLink == null || Memory[roomName].links.upgradeLink == -1)) {
+								this.setUpgradeLink(links, creep, roomName)
+							}
+
 							break;
 						case -1:
 							console.log("not my controller")
@@ -54,6 +50,7 @@ var roleUpgrader = {
 							break;
 						case -12:
 							creep.memory.role = "filler";
+							break;
 						default:
 							console.log(creep.upgradeController(creep.room.controller));
 							console.log("Uknown error in Link Upgrader");
@@ -73,16 +70,27 @@ var roleUpgrader = {
 				creep.memory.upgrading = true;
 				creep.say('🔼');//📈
 			} else {
-<<<<<<< Updated upstream
-				
-=======
->>>>>>> Stashed changes
-				collectLinks.run(creep);
+				if (Memory[roomName].links.upgradeLink != -1) {
+					creep.memory.link = Memory[roomName].links.upgradeLink;
+					collectLinks.run(creep);
+
+				} else {
+					collectContainers.run(creep)
+				}
 				//console.log(links);
 			}
 
 		}
 	}
+	,
+	setUpgradeLink: function (links, creep, roomName) {
+		links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
+		console.log(roomName + " " + links);
+		var upgradeLink = links[0];
+		Memory[roomName].links.upgradeLink = upgradeLink.id;
+	}
+
+
 };
 
 module.exports = roleUpgrader;

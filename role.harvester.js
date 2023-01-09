@@ -3,12 +3,15 @@ var roleHarvester = {
 
   /** @param {Creep} creep **/
   run: function (creep) {
+    var room = creep.room;
+    var roomName = room.name;
+    
     if (creep.memory.storing) {
       if (creep.store.energy == 0) {
         creep.memory.storing = false;
         creep.say('🔄');
       } else {
-        var targets = creep.room.find(FIND_STRUCTURES).filter(structure => [ STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity());
+        var targets = creep.room.find(FIND_STRUCTURES).filter(structure => [STRUCTURE_STORAGE].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity());
         //console.log("test" +targets);
         if (targets.length < 1) {
           targets = creep.room.find(FIND_STRUCTURES).filter(structure => [STRUCTURE_SPAWN, STRUCTURE_EXTENSION].indexOf(structure.structureType) !== -1).filter(structure => structure.store.energy < structure.store.getCapacity(RESOURCE_ENERGY));
@@ -40,7 +43,9 @@ var roleHarvester = {
         }
       }
     } else {
-      //change modes
+      //make sure memory created
+      creep.memory.storing = false;
+      //changing status
       if (creep.store.energy == creep.store.getCapacity(RESOURCE_ENERGY)) {
         creep.memory.storing = true;
         creep.say('⚡');
@@ -56,7 +61,7 @@ var roleHarvester = {
           //team 0
         } else {
           //console.log(creep.harvest(sources[0]))
-//creep.harvest(sources[1]) === ERR_NOT_IN_RANGE
+          //creep.harvest(sources[1]) === ERR_NOT_IN_RANGE
           if (sources) {
             creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#FFC0CB' } });
           } else {

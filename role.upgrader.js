@@ -1,11 +1,15 @@
 var collectContainers = require("collect.containers");
+var linksMgr = require("mgr.links");
+
 var roleUpgrader = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
+		var room = creep.room;
+		var roomName = room.name;
 		//check if links exist
-		var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
-		if (links.length > 1) {
+		var links = linksMgr.findLinksInRoom(room);
+		if (links.length > 1 && creep.memory.role === "upgrader") {
 			//if less than 2 links in a room, become a regular upgrader
 			creep.memory.role = "linkUpgrader";
 		}

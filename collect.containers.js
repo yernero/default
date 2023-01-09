@@ -50,11 +50,15 @@ var collectContainers = {
 
             //if more than 1 structure with energy, go to first one
             if (targets.length > 1) {
+                creep.memory.container = targets[0].id;
+
                 if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
                 }
                 //if just 1 structure with energy, go to first one
             } else if (targets.length == 1) {
+                creep.memory.container = targets[0].id;
+                //console.log(targets[0].id)
                 if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
                 }

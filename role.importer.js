@@ -2,6 +2,8 @@ var roleImporter = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
+		var room = creep.room;
+		var roomName = room.name;
 		if (creep.memory.gathering) {
 			if (creep.room == Game.rooms["E69S33"]) {
 				creep.moveTo(Game.flags.Flag1, { visualizePathStyle: { stroke: '#ffaa00' } });
