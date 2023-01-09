@@ -20,13 +20,14 @@ var roleUpgrader = {
 			} else {
 				//console.log(creep);
 				//assign upgradeLink in memory
-				if (Memory.links.upgradeLink == null) {
+				if (Memory.links.upgradeLink == null || Memory[creep.room.name].links.upgradeLink == -1) {
 					var links = creep.room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
 					//console.log(links);
 					//sort by closest
 					links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
 					var upgradeLink = links[0];
 					Memory.links.upgradeLink = upgradeLink.id;
+					Memory[creep.room.name].links.upgradeLink = upgradeLink.id;
 				} else {
 					switch (creep.upgradeController(creep.room.controller)) {
 						case 0:
@@ -67,6 +68,8 @@ var roleUpgrader = {
 
 		}
 	}
+
+
 };
 
 module.exports = roleUpgrader;

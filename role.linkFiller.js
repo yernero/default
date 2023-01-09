@@ -2,6 +2,7 @@ var roleUpgrader = require("role.upgrader");
 var collectSources = require("collect.sources");
 var collectContainers = require("collect.containers");
 var fillLinks = require("fill.links");
+var fillTerms = require("fill.terminals");
 var collectLinks = require("collect.links");
 var fillContainers = require("fill.containers");
 var roleFiller = {
@@ -11,9 +12,12 @@ var roleFiller = {
 		//console.log(creep.pos);
 
 		//setup link
-	
-		
-		while((Game.getObjectById(creep.memory.link) == null)){
+
+			//remove energy
+			//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
+			creep.memory.link = links[0].id;
+
+		while ((Game.getObjectById(creep.memory.link) == null)) {
 			//find all links
 			var links = creep.room.find(FIND_STRUCTURES, {
 				filter:
@@ -26,7 +30,7 @@ var roleFiller = {
 			links.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
 			console.log(links);
 
-			//remove energy
+			//remove energyter 
 			//console.log(creep.withdraw(links[0],RESOURCE_ENERGY))
 			creep.memory.link = links[0].id;
 
@@ -50,6 +54,12 @@ var roleFiller = {
 					case 0:
 						//Memory.links.upgradeLink =  "61ea04390bd2bf1717dc4e56";
 
+				var myRoom = Game.rooms["W8S53"];
+
+				switch (creep.memory.team) {
+
+
+					case 0:
 						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
 						//var linkToFill = Game.getObjectById(creep.memory.link);
 						//console.log(link)
@@ -65,6 +75,18 @@ var roleFiller = {
 						fillLinks.run(creep);
 
 						break;
+						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 500) {
+							fillLinks.run(creep);
+						} else if (myRoom.terminal && myRoom.terminal.store.getUsedCapacity(RESOURCE_ENERGY) < 45000) {
+							creep.memory.mineral = RESOURCE_ENERGY;
+							fillTerms.run(creep);
+						} else {
+							creep.memory.mineral = RESOURCE_ENERGY;
+							fillContainers.run(creep);
+						}
+						break;
+					case 1:
+						console.log("im special")
 
 					default:
 						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
@@ -75,6 +97,16 @@ var roleFiller = {
 							fillLinks.run(creep);
 						} else {
 							fillContainers.run(creep);
+						var container = Game.getObjectById(creep.memory.container)
+						//console.log(container)
+						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 250) {
+							fillLinks.run(creep);
+						} else if (container && container.store.getUsedCapacity(RESOURCE_ENERGY) / container.store.getCapacity(RESOURCE_ENERGY) > .1) {
+							//console.log("valid container" + Game.getObjectById(creep.memory.container).store.getUsedCapacity(RESOURCE_ENERGY)/Game.getObjectById(creep.memory.container).store.getCapacity(RESOURCE_ENERGY))
+							creep.memory.mineral = RESOURCE_ENERGY;
+							fillTerms.run(creep);
+						} else {
+
 						}
 						break;
 				}
@@ -111,6 +143,26 @@ var roleFiller = {
 					default:
 
 
+					case 1:
+						console.log("Im Special")
+
+
+
+					case 0:
+
+
+					default:
+
+						var upgradeLink = Game.getObjectById(Memory.links.upgradeLink);
+
+						//console.log(upgradeLink);
+						//if link is not full grab from container
+						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 50) {
+							collectContainers.run(creep);
+						} else {
+							console.log("Excess Energy in upgrade Link")
+							collectLinks.run(creep);
+						}
 				}
 
 

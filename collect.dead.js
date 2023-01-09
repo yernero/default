@@ -12,7 +12,7 @@ var collectDead = {
                         
                 });
                 var tombstones = creep.room.find(FIND_TOMBSTONES);
-                var
+                
                 //get tombstone
                 var test = Game.getObjectById("6236a33870df7bd29edc4fb5")    
                 console.log(test)

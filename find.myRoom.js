@@ -24,6 +24,7 @@ var findMyRoom = {
                         } else {
                             Memory.rooms.myRooms = {};
                         }
+                         
                     } else {
                         Memory.rooms = {};
 
