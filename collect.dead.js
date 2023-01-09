@@ -1,35 +1,33 @@
-var fillTerminal = require("fill.links")
 var collectDead = {
     run: function (creep) {
-        if (creep.memory.collecting) {
-            if (creep.carry.energy == 0) {
-                creep.memory.collecting = false;
-                creep.memory.dest = false;
-                creep.say('store');
-            }else{
-                var droppedres = creep.room.find(FIND_DROPPED_RESOURCES, {
-                    filter: x => x.resourceType != RESOURCE_ENERGY
-                        
-                });
-                var tombstones = creep.room.find(FIND_TOMBSTONES);
-                
-                //get tombstone
-                var test = Game.getObjectById("6236a33870df7bd29edc4fb5")    
-                console.log(test)
+        //check for loose energy
+        var droppedres = creep.room.find(FIND_DROPPED_RESOURCES, {
+            filter: x => x.resourceType == RESOURCE_ENERGY
+                && x.amount > 1000
+        });
+        //console.log("Dropped Energy: " + droppedres); //prints list
+        //console.log("Dropped Energy: " + droppedres[0].pos); //prints location of first
+
+        //check if any Dropped res worth collecting
+        if (droppedres.length > 0) {
+            //console.log("Dropped res[0] amount: " + droppedres[0].amount);
+
+            //check if creep can pickup energy
+            if (creep.pickup(droppedres[0]) == ERR_NOT_IN_RANGE) {
+                //check if accessible, try last dropped energy in list instead
+                if (creep.moveTo(droppedres[0],
+                    { visualizePathStyle: { stroke: '#ffffff' } }) == ERR_NO_PATH
+                    && droppedres.length > 1) {
+
+                    creep.moveTo(droppedres[droppedres.length - 1],
+                        { visualizePathStyle: { stroke: '#ffffff' } })
+                }
             }
 
-        } else {
-            //making sure repairing exists
-            creep.memory.collecting= false;
-            //check if time to switch modes
-            
-            if (creep.store[RESOURCE_ENERGY] == creep.store.getCapacity()) {
-                creep.memory.collecting = true;
-                creep.say('collect');
-            } else {
-            }
+            //No droppres energy
         }
+
     }
 
 };
-module.exports = roleRepairer
+module.exports = collectDead

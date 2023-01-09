@@ -2,7 +2,8 @@ var roleRecoverer = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
-
+		var room = creep.room;
+		var roomName = room.name;
 		if (creep.memory.storing && creep.carry.energy == 0) {
 			creep.memory.storing = false;
 			creep.say('🔄 harvest');

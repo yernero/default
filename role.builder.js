@@ -1,176 +1,87 @@
 var roleRepairer = require("role.repairer");
+var collectContainers = require("collect.containers");
+var memMgr = require("mgr.memory");
+
 var roleBuilder = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
 		//creep.memory.building =false;
-		var roomName = creep.room.name;
-		var target = {};
-		if (true && !Memory[roomName].constructionSites.all) {
-			//console.log("no construction sites")
-			if (creep.memory.site == null) {
+		var room = creep.room;
+		var roomName = room.name; var target = {};
 
-			}
-			//	console.log("assign construction")
 
-			targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-			//console.log("setting construction sites " + targets)
-			Memory[roomName].constructionSites.all = targets;
-			//console.log(Memory[roomName].constructionSites.all)
-		}
-		for (var site in Memory[roomName].constructionSites.all) {
-			//console.log(site + " " + Memory[roomName].constructionSites.all[site])
-			
-			if(Memory[roomName].constructionSites.all[site]){
-				var thisSite = Memory[roomName].constructionSites.all[site]
-			}
-			//console.log(!Game.getObjectById(thisSite.id));
-			//console.log(thisSite.progress == null)
-			if (!thisSite  ||!Game.getObjectById(thisSite.id)|| thisSite.progress == null ) {
-				delete Memory[roomName].constructionSites.all;
-				console.log("deleting a construction site from memory")
-			}
-		}
-		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-
-		//console.log(targets);
-		if (targets.length < 1) {
-			//console.log("repair");
-			//There are no construction sites
-			//if(creep.carry.energy <creep.carryCapacity && !creep.memory.building){
-			roleRepairer.run(creep);
-		} else {
-			creep.memory.repairing = false;
-			if (!(Game.getObjectById(creep.memory.dest) && Game.getObjectById(creep.memory.dest)._my)) {
-				creep.memory.dest = 0;
-			}
-			if (creep.memory.building) {
-				if (creep.carry.energy == 0) {
-					//Go Harvest
-					creep.memory.building = false;
-					creep.say('⚡');
-				} else {
-					if (creep.memory.team == 1) {
-						//var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-						if (targets.length > 1) {
-							//build containers first
-							var a = targets.filter(structure => structure.structureType == STRUCTURE_CONTAINER);
-							//console.log(a)
-							if (a.length > 0) {
-								targets = a;
-							}
-							if (!creep.memory.dest) {
-								creep.memory.dest = targets[targets.length - 1].id;
-							}
-							//const towers = creep.room.find(FIND_STRUCTURES, { filter: object => object.energyAvailable < object.energyCapacity });
-							var dest = Game.getObjectById(creep.memory.dest);
-							//if already built
-							if (!dest) {
-								creep.memory.dest = targets[targets.length - 1].id;
-								dest = targets[targets.length - 1];
-							}
-							//console.log("dest: " + dest);
-							if (creep.build(dest) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
-							}
-						} else {
-							if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-							}
-						}
-					} else {
-						//console.log(targets);
-
-						if (!creep.memory.dest) {
-							creep.memory.dest = targets[0].id;
-						}
-						var dest = Game.getObjectById(creep.memory.dest);
-						//already built
-						if (!dest) {
-							creep.memory.dest = targets[targets.length - 1].id;
-							dest = targets[0];
-						}
-						//console.log("dest: " + dest);
-						if (creep.build(dest) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(dest, { visualizePathStyle: { stroke: '#000000' } });
-						}
-					}
-				}
-
-				// creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});
-			} else {
-				//make sure memory created
+		if (creep.memory.building) {
+			if (creep.carry.energy == 0) {
+				//Go Harvest
 				creep.memory.building = false;
-				//changing status
-				if (creep.store.getFreeCapacity() == 0) {
-					creep.memory.building = true;
-					creep.memory.dest = false;
-					creep.say('🚧');
-				} else {
-					//check for loose energy
-					var droppedres = creep.room.find(FIND_DROPPED_RESOURCES, {
-						filter: x => x.resourceType == RESOURCE_ENERGY
-							&& x.amount > 1000
-					});
-					//console.log("Dropped Energy: " + droppedres); //prints list
-					//console.log("Dropped Energy: " + droppedres[0].pos); //prints location of first
+				creep.say('⚡');
+			} else {
 
-					//check if any Dropped res worth collecting
-					if (droppedres.length > 0) {
-						//console.log("Dropped res[0] amount: " + droppedres[0].amount);
-
-						//check if creep can pickup energy
-						if (creep.pickup(droppedres[0]) == ERR_NOT_IN_RANGE) {
-							//check if accessible, try last dropped energy in list instead
-							if (creep.moveTo(droppedres[0],
-								{ visualizePathStyle: { stroke: '#ffffff' } }) == ERR_NO_PATH
-								&& droppedres.length > 1) {
-
-								creep.moveTo(droppedres[droppedres.length - 1],
-									{ visualizePathStyle: { stroke: '#ffffff' } })
-							}
-						}
-
-						//No droppres energy
+				//make sure a destination exists in creep memory
+				if (!creep.memory.dest) {
+					//find all construction sites in room memory
+					memMgr.updateConstructionMem(room);
+					var targets = []
+					for (var site in Memory[roomName].constructionSites.all) {
+						targets.push(Game.getObjectById(Memory[roomName].constructionSites.all[site].id));
+					}
+					//console.log("targets in " + roomName + " " + targets);
+					//if no construction sites, try to repair something
+					if (!targets || targets.length == 0) {
+						//hopefully sets a destination
+						roleRepairer.run(creep)
 					} else {
-						//find structures with energy
-						var targets = creep.room.find(FIND_STRUCTURES,
-							{
-								filter: (i) => (i.structureType == STRUCTURE_CONTAINER ||
-									i.structureType == STRUCTURE_STORAGE)
-									&& i.store[RESOURCE_ENERGY] > 50
-							});
-						//console.log("containers with more than 50 energy" +targets);
-
-						//sort by largest to smallest
-						targets = targets.sort((a, b) => b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY));
-						//console.log("Sorted targs" + targets);
-						//console.log(targets[0])
-
-						//console.log(creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' }}))
-
-						//if more than 1 structure with energy, go to first one
-						if (targets.length > 1) {
-							if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-							}
-							//if just 1 structure with energy, go to first one
-						} else if (targets.length == 1) {
-							if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-							}
-							//if no structure with energy, go to a source
-						} else {
-							var sources = creep.room.find(FIND_SOURCES);
-							if (creep.harvest(sources[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-								creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
-							}
+						//depending on team set target destination
+						switch (creep.memory.team) {
+							case 1:
+								creep.memory.dest = targets[targets.length - 1].id;
+								break;
+							case 0:
+							default:
+								creep.memory.dest = targets[0].id;
+								break;
 						}
 					}
+
+				}
+				//check if destination became invalid
+				var dest = Game.getObjectById(creep.memory.dest);
+				//console.log(dest.pos)
+				if (!dest || dest.hits > 0) {
+					creep.memory.dest = null;
+					//console.log(creep.name + " cannot find work in " + roomName)
+					roleRepairer.run(creep);
+				} else {
+					var status = creep.build(dest);
+					switch (status) {
+						case 0:
+							//worked
+							break;
+						case -9:
+							creep.moveTo(dest);
+							break;
+						default:
+							console.log(status + " error building in " + roomName);
+							break;
+					}
+
 				}
 
-			}
 
+
+			}
+		} else {
+			//make sure memory created
+			creep.memory.building = false;
+			//changing status
+			if (creep.store.getFreeCapacity() == 0) {
+				creep.memory.building = true;
+				creep.memory.dest = false;
+				creep.say('🚧');
+			} else {
+				collectContainers.run(creep);
+			}
 		}
 	}
 };

@@ -3,6 +3,9 @@ var roleHarvester = {
 
   /** @param {Creep} creep **/
   run: function (creep) {
+    var room = creep.room;
+    var roomName = room.name;
+    
     if (creep.memory.storing) {
       if (creep.store.energy == 0) {
         creep.memory.storing = false;

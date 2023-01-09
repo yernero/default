@@ -3,7 +3,8 @@ var roleScavenger = {
   /** @param {Creep} creep **/
   run: function (creep) {
     //console.log(creep.store.getFreeCapacity);
-
+    var room = creep.room;
+    var roomName = room.name;
     if (creep.memory.storing && creep.store.getFreeCapacity() == creep.store.getCapacity()) {
       creep.memory.storing = false;
       creep.say('🔄 harvest');

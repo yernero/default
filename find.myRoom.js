@@ -14,6 +14,7 @@ var findMyRoom = {
                 let room = Game.rooms[key]
                 //checks if room has a controller and is controlled by me
                 if (room.controller && room.controller.my) {
+                    console.log(room.name)
                     //stores room name
                     if (_.has(Memory, "rooms")) {
                         if (_.has(Memory.rooms, "myRooms")) {
@@ -23,8 +24,7 @@ var findMyRoom = {
                             //console.log(Memory.rooms.myRooms[0]);
                         } else {
                             Memory.rooms.myRooms = {};
-                        }
-                         
+                        }  
                     } else {
                         Memory.rooms = {};
 
@@ -42,6 +42,7 @@ var findMyRoom = {
                }
            }*/
         }
+        //console.log(myRoom)
         return myRoom
     }
 };
