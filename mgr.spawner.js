@@ -23,10 +23,12 @@ var spawnMgr = {
                 var sources = room.find(FIND_SOURCES);
                 for (var i in sources) {
                     var source = sources[i];
-                    //console.log("index" + i);
-                    //console.log(utilSrc.countEmptyTiles(room, source))
+
+                    //count open tiles for each source
                     let maxSF = utilSrc.countEmptyTiles(room, source);
-                    //find number of sourceFarmers on team 0
+                    //console.log(maxSF);
+                    
+                    //find number of sourceFarmers on team 
                     var role = "sourceFarmer_" + i;
                     var sourceFarmers = memMgr.getNumCreeps(room, role);
                     //console.log(sourceFarmers);
@@ -214,7 +216,7 @@ var spawnMgr = {
 
 
 
-        if (miners0 < 1 || Memory[roomName].terminal.extractor) {//Miners
+        if (miners0 < 1 && Memory[roomName].terminal.extractor) {//Miners
             body = [WORK, WORK, WORK, CARRY, CARRY, MOVE];//450
 
             this.spawnCreep("miner", 0, room, 0, body);//0
