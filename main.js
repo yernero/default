@@ -34,7 +34,7 @@ module.exports.loop = function () {
 
     var speed = 10;
     //mgr.createMem("outside");
-    if (true || Game.time % speed == 0) {
+    if ( Game.time % speed == 0) {
         displayer.displayAll();
         //displayer.displayStats(myRoom);
     }

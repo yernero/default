@@ -1,4 +1,5 @@
 var memMgr = require("mgr.memory");
+var utilSrc = require("util.sources");
 const { getConstructionSites } = require("./mgr.memory");
 var spawnMgr = {
     /*
@@ -18,36 +19,23 @@ var spawnMgr = {
             if (energy > 200) {
 
                 //Source Farmers
-                //find number of sources
-                var sources = 0;
-                for (var i in Memory[roomName].sources) {
-                    sources++
-                }
-                //console.log("Sources in " + roomName + " " + sources)
-
-                //find number of sourceFarmers on team 0
-                var sourceFarmers0 = memMgr.getNumCreeps(room, "sourceFarmer_0");
-
-                //check if sourceFarmers team 0 are needed
-                if (sources >= 1 && sourceFarmers0 < 4) {
-                    body = [WORK, CARRY, MOVE];//200
-                    this.spawnCreep("sourceFarmer", 0, room, 0, body);
-
-                }
-
-                //find number of sourceFarmers on team 1
-                var sourceFarmers1 = memMgr.getNumCreeps(room, "sourceFarmer_1")
-
-                //check if sourceFarmers team 1 are needed
-                if (energy >= 300) {
-                    if (sources == 2 && sourceFarmers1 < 3) {
-                        body = [WORK, WORK, CARRY, MOVE];//300
-                        this.spawnCreep("sourceFarmer", 1, room, 0, body);
-
+                //Check that every source has the max number of SF
+                var sources = room.find(FIND_SOURCES);
+                for (var i in sources) {
+                    var source = sources[i];
+                    //console.log("index" + i);
+                    //console.log(utilSrc.countEmptyTiles(room, source))
+                    let maxSF = utilSrc.countEmptyTiles(room, source);
+                    //find number of sourceFarmers on team 0
+                    var role = "sourceFarmer_" + i;
+                    var sourceFarmers = memMgr.getNumCreeps(room, role);
+                    //console.log(sourceFarmers);
+                    if (sourceFarmers < maxSF) {
+                        body = [WORK, CARRY, MOVE];//200
+                        this.spawnCreep("sourceFarmer", i, room, 0, body);
                     }
                 }
 
-                //console.log(sourceFarmers0 + " " + sourceFarmers1)
 
                 //Storage Link Managers
                 //Find number of storage link maangers on team 0
@@ -168,7 +156,7 @@ var spawnMgr = {
                     this.spawnCreep("filler", 0, room, 0, body);
 
                 }
-                
+
                 if (storage > 50000 && fillers0 < 4 && energy < 7000) {
                     body = [CARRY, CARRY, CARRY, MOVE, MOVE]//250
 
@@ -190,7 +178,7 @@ var spawnMgr = {
                     this.spawnCreep("upgrader", 0, room, 0, body)//0
                 }
 
-                if ((upgraders0 +linkUpgraders0< 3)) {
+                if ((upgraders0 + linkUpgraders0 < 3)) {
                     body = [WORK, CARRY, CARRY, MOVE];//250
 
                     this.spawnCreep("upgrader", 0, room, 0, body)//0
@@ -303,6 +291,8 @@ var spawnMgr = {
         };
 
     }
+
+
 };
 
 module.exports = spawnMgr;
