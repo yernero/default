@@ -13,22 +13,22 @@ var moneyMgr = {
             //console.log(room.terminal.cooldown)
             if (room.terminal.store.getUsedCapacity(res) > 1000) {
                 console.log(res + " exists")
-                buyRes = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
-                if (buyRes.length > 0) {
-                    buyRes.sort((orderA, orderB) => orderB.price - orderA.price);
+                buyOrders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
+                if (buyOrders.length > 0) {
+                    buyOrders.sort((orderA, orderB) => orderB.price - orderA.price);
                     orderchoice = 0
-                    console.log(buyRes[0].remainingAmount + " " + room.terminal.store.getUsedCapacity[res])
-                    while (buyRes[0].remainingAmount < room.terminal.store.getUsedCapacity[res]) {
+                    console.log(buyOrders[0].remainingAmount + " " + room.terminal.store.getUsedCapacity[res])
+                    while (buyOrders[0].remainingAmount < room.terminal.store.getUsedCapacity[res]) {
                         console.log("looking for bigger order")
                     }
-                    sellAmount = buyRes[0].remainingAmount;
-                    if (buyRes[0].remainingAmount > room.terminal.store[res]) {
+                    sellAmount = buyOrders[0].remainingAmount;
+                    if (buyOrders[0].remainingAmount > room.terminal.store[res]) {
                         sellAmount = room.terminal.store[res];
                     }
-                    console.log(Game.market.deal(buyRes[0].id, sellAmount, room.name));
-                    console.log("Sold " + sellAmount + " Utrium at " + buyRes[0].price + " Total: " + (sellAmount * buyRes[0].price));
+                    console.log(Game.market.deal(buyOrders[0].id, sellAmount, room.name));
+                    console.log("Sold " + sellAmount + " Utrium at " + buyOrders[0].price + " Total: " + (sellAmount * buyOrders[0].price));
 
-                    //Memory.test = buyRes[0]; // fast
+                    //Memory.test = buyOrders[0]; // fast
                     return true;
                 } else {
                     console.log("No orders for " + res)
@@ -47,24 +47,24 @@ var moneyMgr = {
             //console.log(room.terminal.store.getUsedCapacity(res) )
             //console.log(res + " " +room.terminal.store.getUsedCapacity(res))
             //console.log(room.terminal.cooldown)
-            if (room.terminal.store.getUsedCapacity(res) > 1000) {
-                console.log(res + " exists")
-                buyRes = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
-                if (buyRes.length > 0) {
-                    buyRes.sort((orderA, orderB) => orderB.price - orderA.price);
+            if (room.terminal.store.getUsedCapacity(res) >= sellAmount) {
+                // console.log(res + " exists")
+                buyOrders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
+                if (buyOrders.length > 0) {
+                    buyOrders.sort((orderA, orderB) => orderB.price - orderA.price);
                     orderchoice = 0
-                    console.log(buyRes[0].remainingAmount + " " + room.terminal.store.getUsedCapacity[res])
-                    while (buyRes[0].remainingAmount < room.terminal.store.getUsedCapacity[res]) {
+                    console.log(buyOrders[0].remainingAmount + " " + room.terminal.store.getUsedCapacity[res])
+                    while (buyOrders[0].remainingAmount < room.terminal.store.getUsedCapacity[res]) {
                         console.log("looking for bigger order")
                     }
-                    sellAmount = buyRes[0].remainingAmount;
-                    if (buyRes[0].remainingAmount > room.terminal.store[res]) {
+                    sellAmount = buyOrders[0].remainingAmount;
+                    if (buyOrders[0].remainingAmount > room.terminal.store[res]) {
                         sellAmount = room.terminal.store[res];
                     }
-                    console.log(Game.market.deal(buyRes[0].id, sellAmount, room.name));
-                    console.log("Sold " + sellAmount + " Utrium at " + buyRes[0].price + " Total: " + (sellAmount * buyRes[0].price));
+                    console.log(Game.market.deal(buyOrders[0].id, sellAmount, room.name));
+                    console.log("Sold " + sellAmount + " Utrium at " + buyOrders[0].price + " Total: " + (sellAmount * buyOrders[0].price));
 
-                    //Memory.test = buyRes[0]; // fast
+                    //Memory.test = buyOrders[0]; // fast
                     return true;
                 } else {
                     console.log("No orders for " + res)
@@ -79,6 +79,15 @@ var moneyMgr = {
             roomName = room.name
             //setup Room Resource
             memMgr.setRoomRes(room);
+            var terminal = room.terminal;
+            if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+
+                console.log('Terminal storage is full or energy is more than 1/5 of the total capacity');
+                this.sellRes(room, RESOURCE_ENERGY, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
+                this.sellEnergy(room, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
+            } else {
+                console.log('Terminal storage is not full and energy is less than 1/5 of the total capacity');
+            }
             var res = Memory[roomName].terminal.roomRes[0].mineralType;
             //console.log(res);
 
@@ -112,7 +121,33 @@ var moneyMgr = {
 
 
 
+    },
+    sellEnergy: function (room, amount) {
+        this.sellRes(room,RESOURCE_ENERGY,amount)
+       
+
+            var myTerminal = Game.getObjectById(room.terminal.id);
+            if (myTerminal.store.energy >= amount) {
+
+                var orders = Game.market.getAllOrders(order => order.resourceType == RESOURCE_ENERGY &&
+                    order.type == ORDER_SELL &&
+                    Game.market.calcTransactionCost(amount, room.name, order.roomName) < myTerminal.store.energy);
+                if (orders.length > 0) {
+                    var result = Game.market.deal(orders[0].id, amount, room.name);
+                    if (result == OK) {
+                        console.log(amount + ' energy successfully sold to ' + orders[0].roomName);
+                    } else {
+                        console.log('Error selling energy: ' + result);
+                    }
+                } else {
+                    console.log('No suitable sell orders found for energy.');
+                }
+            } else {
+                console.log('Terminal does not have enough energy to sell.');
+            }
+        
     }
+
 
 
 }

@@ -32,7 +32,7 @@ module.exports.loop = function () {
     memMgr.updateCreepMem();
     memMgr.clearMemory();
 
-    var speed = 10;
+    var speed = 100;
     //mgr.createMem("outside");
     if ( Game.time % speed == 0) {
         displayer.displayAll();
