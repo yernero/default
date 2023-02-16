@@ -1,7 +1,4 @@
-var roleGuard = require("role.towerGuard");
-var roleUpgrader = require("role.upgrader");
-var roleRepairer = require("role.repairer");
-var roleFiller = require("role.filler")
+
 var fillContainers = {
     /** @param {Creep} creep **/
     run: function (creep) {
@@ -23,32 +20,24 @@ var fillContainers = {
         //console.log(roomName + " targets " + targets);
 
         if (targets.length == 0) {
-            //console.log("Out of storage")
-            //console.log(creep.room + " " + targets)
-            if (!Memory[roomName].towers) {
-                roleFiller.run(creep);
-            } else {
-                roleGuard.run(creep);
-            }
-        } else {
-            //find containers and storage with storage open
-            /*var targets = creep.room.find(FIND_STRUCTURES).filter(
+            console.log("Out of storage")
+            console.log(creep.room + " " + targets)
+             // console.log(" team 1 out")
+             targets = creep.room.find(FIND_STRUCTURES).filter(
                 structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
                     structure.structureType) !== -1).filter(
-                        structure => structure.store.energy < structure.store.getCapacity()).filter(
-                            structure => creep.pos.getRangeTo(structure) < 10
-                        );*/
+                        structure => structure.store.energy < structure.store.getCapacity());
+          
+        } else {
+           
             //console.log(creep.room + " " + targets)
-            if (targets.length == 0) {
-                // console.log(" team 1 out")
-                targets = creep.room.find(FIND_STRUCTURES).filter(
-                    structure => [STRUCTURE_CONTAINER, STRUCTURE_STORAGE].indexOf(
-                        structure.structureType) !== -1).filter(
-                            structure => structure.store.energy < structure.store.getCapacity());
-            }
+           
             //current container is chosen manually from structures less than 2 spots away, need to find closest container. 
             //console.log(targets[0]);
-            var status = creep.transfer(targets[0], RESOURCE_ENERGY);
+            if(!creep.memory.mineral){
+                creep.memory.mineral = RESOURCE_ENERGY;
+            }
+            var status = creep.transfer(targets[0], creep.memory.mineral);
             switch (status) {
                 case -9:
                     creep.moveTo(targets[targets.length - 1]);
@@ -60,15 +49,13 @@ var fillContainers = {
                     break;
                 case -7:
                     //when the room level is too low for the storage
-                    roleUpgrader.run(creep);
+                    console.log("Room level too low for storage")
                     break;
                 case -8://full
-                    roleRepairer.run(creep);
+                    console.log("Room Full");
                     break;
                 default:
                     console.log(status + " Error filling container for " + creep.name)
-                    fillAnything.run(creep);
-
             }
 
             if (creep.memory.team === 0) {

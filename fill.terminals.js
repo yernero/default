@@ -1,3 +1,4 @@
+var fillAnything = require("fill.anything");
 var fillTerminals = {
     /** @param {Creep} creep **/
     run: function (creep) {
@@ -21,8 +22,9 @@ var fillTerminals = {
                 creep.transfer(terminals[0], RESOURCE_ENERGY);
                 break;
             case -7:
-                console.log("No Terminal");
-                creep.memory.role = "sourceFarmer"
+                //console.log("No Terminal");
+                fillAnything.run(creep);
+                //creep.memory.role = "filler"
             break;
             case -8:
 
