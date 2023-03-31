@@ -1,4 +1,5 @@
 var fillAnything = require("fill.anything");
+var marketMgr = require("mgr.market");
 var fillTerminals = {
     /** @param {Creep} creep **/
     run: function (creep) {
@@ -28,7 +29,8 @@ var fillTerminals = {
             break;
             case -8:
 
-                console.log(terminals[0].id + " is full of energy");
+                console.log("Terminal " + terminals[0].id + " is full of energy");
+                marketMgr.manageRoomRes(creep.m);
                 break;
             case -9: //not in range
                 creep.moveTo(terminals[0], { visualizePathStyle: { stroke: '#FFC0CB' } });

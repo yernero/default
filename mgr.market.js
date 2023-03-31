@@ -14,6 +14,7 @@ var moneyMgr = {
             if (room.terminal.store.getUsedCapacity(res) > 1000) {
                 console.log(res + " exists")
                 buyOrders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: res });
+                console.log("Orders" + buyOrders)
                 if (buyOrders.length > 0) {
                     buyOrders.sort((orderA, orderB) => orderB.price - orderA.price);
                     orderchoice = 0
@@ -85,6 +86,8 @@ var moneyMgr = {
                 console.log('Terminal storage is full or energy is more than 1/5 of the total capacity');
                 this.sellRes(room, RESOURCE_ENERGY, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
                 this.sellEnergy(room, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
+            } if (terminal.store.getUsedCapacity(Memory[roomName].terminal.roomRes) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(Memory[roomName].terminal.roomRes) === 0) {
+                 console.log("Too much res")
             } else {
                 console.log('Terminal storage is not full and energy is less than 1/5 of the total capacity');
             }
@@ -123,29 +126,29 @@ var moneyMgr = {
 
     },
     sellEnergy: function (room, amount) {
-        this.sellRes(room,RESOURCE_ENERGY,amount)
-       
+        this.sellRes(room, RESOURCE_ENERGY, amount)
 
-            var myTerminal = Game.getObjectById(room.terminal.id);
-            if (myTerminal.store.energy >= amount) {
 
-                var orders = Game.market.getAllOrders(order => order.resourceType == RESOURCE_ENERGY &&
-                    order.type == ORDER_SELL &&
-                    Game.market.calcTransactionCost(amount, room.name, order.roomName) < myTerminal.store.energy);
-                if (orders.length > 0) {
-                    var result = Game.market.deal(orders[0].id, amount, room.name);
-                    if (result == OK) {
-                        console.log(amount + ' energy successfully sold to ' + orders[0].roomName);
-                    } else {
-                        console.log('Error selling energy: ' + result);
-                    }
+        var myTerminal = Game.getObjectById(room.terminal.id);
+        if (myTerminal.store.energy >= amount) {
+
+            var orders = Game.market.getAllOrders(order => order.resourceType == RESOURCE_ENERGY &&
+                order.type == ORDER_SELL &&
+                Game.market.calcTransactionCost(amount, room.name, order.roomName) < myTerminal.store.energy);
+            if (orders.length > 0) {
+                var result = Game.market.deal(orders[0].id, amount, room.name);
+                if (result == OK) {
+                    console.log(amount + ' energy successfully sold to ' + orders[0].roomName);
                 } else {
-                    console.log('No suitable sell orders found for energy.');
+                    console.log('Error selling energy: ' + result);
                 }
             } else {
-                console.log('Terminal does not have enough energy to sell.');
+                console.log('No suitable sell orders found for energy.');
             }
-        
+        } else {
+            console.log('Terminal does not have enough energy to sell.');
+        }
+
     }
 
 
