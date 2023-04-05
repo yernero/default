@@ -21,11 +21,12 @@ var roleMiner = {
 
         var mine = Game.getObjectById(creep.memory.mine);
         //console.log(mineral + ": " + resAmt + ", Energy: " + eAmt + ", terminal: " + terminal.store.getCapacity())
-        
+
         if (resAmt < terminal.store.getCapacity() / 3) {
             console.log("lacking minerals")
             if (creep.memory.mining) {
                 if (creep.store.getFreeCapacity() > 0) {
+                    console.log("uhhh")
                     mine(creep);
                 } else {
                     //store minerals
@@ -36,9 +37,12 @@ var roleMiner = {
             } else {
 
                 //auto setting mining status at start
-                creep.memory.mining = false;
 
-                fill.fillTerminals(creep);
+                creep.memory.mining = false;
+                for (let resourceType in creep.store) {
+                    console.log("res: " +resourceType)
+                    fill.fillTerminals(creep,resourceType);
+                }
 
                 /*                 //check if the creep is adding energy
                                 if (creep.memory.fillEnergy) {
@@ -97,7 +101,10 @@ var roleMiner = {
 
             } else {
                 if (creep.store.getUsedCapacity() != 0) {
-                    fill.fillTerminals(creep);
+                    for (let resourceType in creep.store) {
+                        console.log("res: " +resourceType)
+                        fill.fillTerminals(creep,resourceType);
+                    }
 
                 } else {
                     creep.memory.mining = true;
@@ -108,7 +115,7 @@ var roleMiner = {
 
             }
         } else {
-            console.log("Terminal in " + roomName + " is 1/3 " +mineral + " & 1/3 Energy");
+            console.log("Terminal in " + roomName + " is 1/3 " + mineral + " & 1/3 Energy");
 
         }
     }

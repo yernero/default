@@ -76,11 +76,11 @@ var moneyMgr = {
     }
     ,
     manageRoomRes: function (room) {
-        if (room.terminal) {
+        var terminal = room.terminal;
+        if (terminal) {
             roomName = room.name
             //setup Room Resource
             memMgr.setRoomRes(room);
-            var terminal = room.terminal;
             if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
 
                 console.log('Terminal storage is full or energy is more than 1/5 of the total capacity');

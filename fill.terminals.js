@@ -30,7 +30,7 @@ var fillTerminals = {
             case -8:
 
                 console.log("Terminal " + terminals[0].id + " is full of energy");
-                marketMgr.manageRoomRes(creep.m);
+                marketMgr.manageRoomRes(creep.room);
                 break;
             case -9: //not in range
                 creep.moveTo(terminals[0], { visualizePathStyle: { stroke: '#FFC0CB' } });

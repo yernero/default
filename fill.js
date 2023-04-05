@@ -77,23 +77,19 @@ var fill = {
             }
         }
     },
-    fillTerminals: function (creep) {
+    fillTerminals: function (creep, mineral) {
         //console.log(creep.memory.role)
         //Find Terminal
         var terminal = creep.room.terminal;
-        let mineral = creep.memory.mineral;
-        if(creep.store.getUsedCapacity(RESOURCE_ENERGY)> 0){
-            mineral = RESOURCE_ENERGY;
-        }
         //Attempt to transfer mineral to Terminal
         if (creep.store.getUsedCapacity(mineral) > 0) {
-            switch (creep.transfer(terminal, creep.memory.mineral)) {
+            switch (creep.transfer(terminal, mineral)) {
                 case 0: //successful
                     //console.log("successful")
                     break;
                 case -6:
                     //no mineral
-                    console.log("logic error in transfering to terminal")
+                    console.log("logic error for " + creep.memory.role + " in transfering to terminal")
                     break;
                 case -7:
                     //console.log("No Terminal");
