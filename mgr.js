@@ -5,7 +5,6 @@ var roleRepairer = require("role.repairer");
 var roleSettler = require("role.settler");
 var roleImporter = require("role.importer");
 var towerGuard = require("role.towerGuard");
-var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
 var roleDefender = require("role.scavenger");
 var roleSourceFarmer = require("role.sourceFarmer");
@@ -48,10 +47,10 @@ var mgr = {
                             roleRepairer.run(creep);
                             break;
                         case "filler":
-                            roleFiller.run(creep);
+                            roles.filler(creep);
                             break;
                         case "scavenger":
-                            roleDefender.run(creep)
+                            roles.defender(creep)
                             break;
                         case "towerGuard":
                             towerGuard.run(creep)

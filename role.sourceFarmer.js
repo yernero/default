@@ -1,6 +1,4 @@
 var roleUpgrader = require("role.upgrader");
-var roleFiller = require("role.filler");
-var roleBuilder = require("role.builder");
 var fill = require("fill");
 var roleSourceFarmer = {
 

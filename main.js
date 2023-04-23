@@ -1,13 +1,10 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
 var roleRepairer = require("role.repairer");
 var roleSettler = require("role.settler");
 var roleImporter = require("role.importer");
 var towerGuard = require("role.towerGuard");
-var roleFiller = require("role.filler");
 var roleScavenger = require("role.scavenger")
-var roleDefender = require("role.scavenger");
 var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleLinkFiller = require("role.linkFiller");
@@ -29,7 +26,9 @@ module.exports.loop = function () {
     memMgr.createRoomsMem();
     //creates memory for all creeps
     //memMgr.createCreepMem();
-    memMgr.updateCreepMem();
+    if(Game.time % 150 == 0){
+        memMgr.updateCreepMem();
+    }
     memMgr.clearMemory();
 
     var speed = 10;
@@ -81,7 +80,7 @@ module.exports.loop = function () {
                 //create a spawn
                 console.log("implement spawn creation")
             }
-            if (room.energyAvailable >= 150) {
+            if (room.energyAvailable >= 150 && Game.time % 150 == 0) {
                 spawnMgr.energyCollection(room);
                 spawnMgr.defense(room);
                 spawnMgr.industry(room);

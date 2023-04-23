@@ -7,7 +7,6 @@ var displayer = {
         if (Game.cpu.bucket > 10000) {
             console.log(Game.cpu.generatePixel());
         }
-        // mgr.updateCreepMem("outside");
 
         console.log("Outside Creeps: " + Memory.outside.creeps.total)
         var outsideInfo = ""

@@ -1,7 +1,6 @@
 var marketMgr = require("mgr.market");
 var roleUpgrader = require("role.upgrader");
 var roleRepairer = require("role.repairer");
-var roleFiller = require("role.filler")
 var fill = {
     withdrawAndDropTerm: function (creep) {
         let resourceType = creep.memory.mineral;
@@ -209,7 +208,8 @@ var fill = {
             //console.log("Out of storage")
             //console.log(creep.room + " " + targets)
             if (!Memory[roomName].towers) {
-                roleFiller.run(creep);
+                console.log("choose what to do instead of be a filler")
+                //roles.filler(creep);
             } else {
                 console.log("decide what to do instead of be a guard")
                 //roleGuard.run(creep);

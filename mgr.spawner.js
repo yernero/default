@@ -27,7 +27,7 @@ var spawnMgr = {
                     //count open tiles for each source
                     let maxSF = utilSrc.countEmptyTiles(room, source);
                     //console.log(maxSF);
-                    
+
                     //find number of sourceFarmers on team 
                     var role = "sourceFarmer_" + i;
                     var sourceFarmers = memMgr.getNumCreeps(room, role);
@@ -125,10 +125,10 @@ var spawnMgr = {
         if (energy >= 200) {
             memMgr.updateConstructionMem(room);
 
-            var constructionSites = memMgr.getConstructionSites(room);
+            //var constructionSites = memMgr.getConstructionSites(room);
             //console.log(roomName + " " + constructionSites.length)
-
-            if (constructionSites.length > 0) {
+            //console.log("checking construction sites: " + Memory[roomName].constructionSites.all[0]);
+            if (Memory[roomName].constructionSites.all[0]) {
 
                 //console.log(roomName + " " + constructionSites)
                 var builders0 = memMgr.getNumCreeps(room, "builder_0")
@@ -225,14 +225,17 @@ var spawnMgr = {
         } else if (builders1 < 1) {
             body = [WORK, WORK, CARRY, MOVE];//300
 
-            this.spawnCreep("builder", 1, room, 0, body);
+            if (Memory[roomName].constructionSites.all[0]) {
+                this.spawnCreep("builder", 1, room, 0, body);
+
+            }
 
             //21
         } else if (builders0 < 0) {
             body = [WORK, CARRY, CARRY, MOVE];//250
-
-            this.spawnCreep("builder", 0, room, 0, body);
-
+            if (Memory[roomName].constructionSites.all[0]) {
+                this.spawnCreep("builder", 0, room, 0, body);
+            }
             //22
         } else if (repairers1 < 1) {//repairers 1
             body = [WORK, WORK, CARRY, CARRY, MOVE];//350

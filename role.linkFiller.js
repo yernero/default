@@ -2,7 +2,7 @@ var roleUpgrader = require("role.upgrader");
 var linksMgr = require("mgr.links");
 var collect = require("collect");
 var fill = require("fill");
-var roleFiller = {
+var roleLinkFiller = {
 
 	/** @param {Creep} creep **/
 	run: function (creep) {
@@ -136,4 +136,4 @@ var roleFiller = {
 	}
 };
 
-module.exports = roleFiller;
+module.exports = roleLinkFiller;

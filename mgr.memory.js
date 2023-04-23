@@ -108,6 +108,7 @@ var memMgr = {
     }
     ,
     updateCreepMem: function () {
+        console.log("updating creep memory");
         this.createCreepMem();
         for (let creepName in Game.creeps) {
             var creep = Game.creeps[creepName];
@@ -142,6 +143,8 @@ var memMgr = {
     }
     ,
     updateRepairMem: function (room) {
+        console.log("updating repair memory for room " + room.name);
+
         var roomName = room.name;
 
         //find things to be repaired
@@ -167,6 +170,7 @@ var memMgr = {
     }
     ,
     updateConstructionMem: function (room) {
+        console.log("updating construction memory for room " + room.name);
         var roomName = room.name;
         var targets = room.find(FIND_CONSTRUCTION_SITES);
         Memory[roomName].constructionSites.all = targets;
@@ -198,6 +202,8 @@ var memMgr = {
     }
     ,
     updateContainersMem: function (room) {
+        console.log("updating containers memory for room " + room.name);
+
         var storage = room.find(FIND_STRUCTURES, {
             filter: (i) => (i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE)
         });
@@ -221,6 +227,8 @@ var memMgr = {
     }
     ,
     updateTowerMem: function (room) {
+        console.log("updating tower memory for room " + room.name);
+
         var roomName = room.name;
 
         var towers = room.find(FIND_STRUCTURES,
@@ -232,6 +240,7 @@ var memMgr = {
     }
     ,
     updateLinkMem(room) {
+        console.log("updating link memory for room " + room.name);
         var roomName = room.name
         var links = room.find(FIND_STRUCTURES, { filter: (i) => i.structureType == STRUCTURE_LINK })
         Memory[roomName].links.total = links.length
@@ -251,6 +260,8 @@ var memMgr = {
     }
     ,
     updateSpawnMem(room) {
+        console.log("updating spawn memory for room " + room.name);
+
         var roomName = room.name;
         Memory[roomName].spawns = {};
         var spawns = []
@@ -299,6 +310,7 @@ var memMgr = {
     }
     ,
     updateExtensions: function (room) {
+        console.log("updating extension memory for room " + room.name);
         let roomName = room.name;
         var extensions = room.find(FIND_STRUCTURES).filter(i => i.structureType == STRUCTURE_EXTENSION).filter(i => i.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
         Memory[roomName].extensions = extensions;
