@@ -1,8 +1,7 @@
 var roleUpgrader = require("role.upgrader");
 var roleFiller = require("role.filler");
 var roleBuilder = require("role.builder");
-var fillContainers = require("fill.containers");
-var fillLinks = require("fill.links");
+var fill = require("fill");
 var roleSourceFarmer = {
 
     /** @param {Creep} creep **/
@@ -51,13 +50,13 @@ var roleSourceFarmer = {
                             creep.memory.link = links[0].id;
 
                         } else {
-                            fillContainers.run(creep);
+                            fill.fillContainers(creep);
                         }
                     }
                     if (creep.memory.link != Memory[roomName].links.storageLink) {
-                        fillLinks.run(creep)
+                        fill.fillLinks(creep)
                     } else {
-                        fillContainers.run(creep);
+                        fill.fillContainers(creep);
                     }
 
 
@@ -65,7 +64,7 @@ var roleSourceFarmer = {
                 } else {
                     // console.log("room " +room)
 
-                    fillContainers.run(creep);
+                    fill.fillContainers(creep);
                 }
 
 

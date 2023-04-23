@@ -1,6 +1,7 @@
 var roleUpgrader = require("role.upgrader");
-var collectContainers = require("collect.containers");
-var fillTerminals = require("fill.terminals");
+
+var collect = require("collect");
+var fill = require("fill");
 var memMgr = require("mgr.memory");
 var towerGuard = {
 
@@ -19,7 +20,7 @@ var towerGuard = {
 		if (creep.memory.filling) {
 
 			if (towers.length < 1) {
-				fillTerminals.run(creep);
+				fill.fillTerminals(creep);
 				//roleUpgrader.run(creep)
 			} else {
 				//change mode
@@ -41,7 +42,7 @@ var towerGuard = {
 				creep.memory.filling = true;
 				creep.say('⚡ filling');
 			} else {
-				collectContainers.run(creep);
+				collect.containers(creep);
 			}
 
 		}

@@ -1,4 +1,4 @@
-var collectContainers = require("collect.containers");
+var collect = require("collect")
 var linksMgr = require("mgr.links");
 
 var roleUpgrader = {
@@ -38,7 +38,7 @@ var roleUpgrader = {
 				creep.memory.upgrading = true;
 				creep.say('📈🔼');
 			} else {
-				collectContainers.run(creep);
+				collect.containers(creep);
 			}
 
 		}

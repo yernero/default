@@ -1,5 +1,7 @@
 var marketMgr = require("mgr.market");
-
+var roleUpgrader = require("role.upgrader");
+var roleRepairer = require("role.repairer");
+var roleFiller = require("role.filler")
 var fill = {
     withdrawAndDropTerm: function (creep) {
         let resourceType = creep.memory.mineral;
@@ -77,44 +79,44 @@ var fill = {
             }
         }
     },
-    fillTerminals: function (creep, mineral) {
-        //console.log(creep.memory.role)
-        //Find Terminal
+    fillTerminals: function (creep) {
+        //Set Terminal
         var terminal = creep.room.terminal;
-        //Attempt to transfer mineral to Terminal
-        if (creep.store.getUsedCapacity(mineral) > 0) {
-            switch (creep.transfer(terminal, mineral)) {
-                case 0: //successful
-                    //console.log("successful")
-                    break;
-                case -6:
-                    //no mineral
-                    console.log("logic error for " + creep.memory.role + " in transfering to terminal")
-                    break;
-                case -7:
-                    //console.log("No Terminal");
-                    fillAnything(creep);
-                    //creep.memory.role = "filler"
-                    break;
-                case -8:
-
-                    console.log("Terminal " + terminal.id + " is full of energy");
-                    marketMgr.manageRoomRes(creep.m);
-                    break;
-                case -9: //not in range
-                    creep.moveTo(terminal, { visualizePathStyle: { stroke: '#FFC0CB' } });
-                    break;
-                case -10:
-                    creep.memory.mineral = RESOURCE_ENERGY;
-                    console.log("Fix resource in fill.terminals");
-                    console.log(creep.memory.role)
-                    break;
-                default:
-                    console.log(creep.transfer(terminal, creep.memory.mineral));
-                    console.log("unknown Error in terminal transfer, investigate")
-                    break;
-            }
+        // transfer all resources
+        for(const resourceType in creep.store) {
+                switch (creep.transfer(terminal, resourceType)) {
+                    case 0: //successful
+                        //console.log("successful")
+                        break;
+                    case -6:
+                        //no mineral
+                        console.log("logic error for " + creep.memory.role + " in transfering to terminal")
+                        break;
+                    case -7:
+                        //console.log("No Terminal");
+                        this.fillAnything(creep);
+                        //creep.memory.role = "filler"
+                        break;
+                    case -8:
+    
+                        console.log("Terminal " + terminal.id + " is full of energy");
+                        marketMgr.manageRoomRes(creep.room);
+                        break;
+                    case -9: //not in range
+                        creep.moveTo(terminal, { visualizePathStyle: { stroke: '#FFC0CB' } });
+                        break;
+                    case -10:
+                        creep.memory.mineral = RESOURCE_ENERGY;
+                        console.log("Fix resource in fill.fillterminals()");
+                        console.log(creep.memory.role + "-10")
+                        break;
+                    default:
+                        console.log(creep.transfer(terminal, creep.memory.mineral));
+                        console.log("unknown Error in terminal transfer, investigate")
+                        break;
+                }         
         }
+
 
 
     },
@@ -209,7 +211,8 @@ var fill = {
             if (!Memory[roomName].towers) {
                 roleFiller.run(creep);
             } else {
-                roleGuard.run(creep);
+                console.log("decide what to do instead of be a guard")
+                //roleGuard.run(creep);
             }
         } else {
             //find containers and storage with storage open
@@ -248,7 +251,7 @@ var fill = {
                     break;
                 default:
                     console.log(status + " Error filling container for " + creep.name)
-                    fillAnything(creep);
+                    this.fillAnything(creep);
 
             }
 
@@ -291,7 +294,7 @@ var fill = {
                     console.log("Invalid Link reference " + creep.memory.link);
                 case -8:
                     //full link
-                    fillContainers(creep)
+                    this.fillContainers(creep)
                     break;
                 default:
                     //console.log(status);

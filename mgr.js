@@ -1,6 +1,6 @@
+var collect = require("collect");
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
 var roleRepairer = require("role.repairer");
 var roleSettler = require("role.settler");
 var roleImporter = require("role.importer");
@@ -12,7 +12,7 @@ var roleSourceFarmer = require("role.sourceFarmer");
 var roleLinkUpgrader = require("role.linkUpgrader");
 var roleStorageLinkMgr = require("role.storageLinkMgr");
 var roleMiner = require("role.miner");
-var collectDead = require("role.miner");
+var roles = require("roles");
 var linksMgr = require("mgr.links");
 
 var mgr = {
@@ -39,7 +39,8 @@ var mgr = {
                             roleHarvester.run(creep);
                             break;
                         case "builder":
-                            roleBuilder.run(creep);
+                            roles.builder(creep);
+                            //roleBuilder.run(creep);
                             break;
 
                         case "repairer":
@@ -103,7 +104,7 @@ var mgr = {
                             }
 
                         case "collector":
-                            collectDead.run(creep);
+                            collect.dead.run(creep);
                             break;
                         case "settler":
                             roleSettler.run(creep);

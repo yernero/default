@@ -1,4 +1,4 @@
-var collectContainers = require("collect.containers");
+var collect = require("collect");
 var fill = require("fill");
 var roleMiner = {
     /**@param {creep} creep **/
@@ -40,8 +40,8 @@ var roleMiner = {
 
                 creep.memory.mining = false;
                 for (let resourceType in creep.store) {
-                    console.log("res: " +resourceType)
-                    fill.fillTerminals(creep,resourceType);
+                    //console.log("res: " +resourceType)
+                    fill.fillTerminals(creep);
                 }
 
                 /*                 //check if the creep is adding energy
@@ -92,7 +92,7 @@ var roleMiner = {
 
             if (creep.memory.mining) {
                 if (creep.store.getFreeCapacity() > 0) {
-                    collectContainers.run(creep);
+                    collect.containers(creep);
                 } else {
                     //store minerals
                     creep.memory.mining = false;
@@ -102,8 +102,8 @@ var roleMiner = {
             } else {
                 if (creep.store.getUsedCapacity() != 0) {
                     for (let resourceType in creep.store) {
-                        console.log("res: " +resourceType)
-                        fill.fillTerminals(creep,resourceType);
+                        //console.log("res: " +resourceType)
+                        fill.fillTerminals(creep);
                     }
 
                 } else {

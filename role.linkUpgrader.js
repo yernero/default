@@ -1,5 +1,4 @@
-var collectLinks = require("collect.links");
-var collectContainers = require("collect.containers")
+var collect = require("collect");
 var linksMgr = require("mgr.links");
 var roleUpgrader = {
 
@@ -72,10 +71,10 @@ var roleUpgrader = {
 			} else {
 				if (Memory[roomName].links.upgradeLink != -1) {
 					creep.memory.link = Memory[roomName].links.upgradeLink;
-					collectLinks.run(creep);
+					collect.links(creep);
 
 				} else {
-					collectContainers.run(creep)
+					collect.containers(creep)
 				}
 				//console.log(links);
 			}

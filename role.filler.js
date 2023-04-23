@@ -1,6 +1,6 @@
 var roleUpgrader = require("role.upgrader");
-var collectSources = require("collect.sources");
-var collectContainers = require("collect.containers");
+
+var collect = require("collect");
 const { getExtensions } = require("./mgr.memory");
 
 var roleFiller = {
@@ -74,7 +74,7 @@ var roleFiller = {
 				creep.memory.storing = true;
 				creep.say('🧪');
 			} else {
-				collectContainers.run(creep);
+				collect.containers(creep);
 			}
 		}
 		//creep.moveTo(Game.flags["home"],{visualizePathStyle: {stroke: '#ffaa00'}});

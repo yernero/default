@@ -1,11 +1,8 @@
 var roleUpgrader = require("role.upgrader");
-var collectSources = require("collect.sources");
-var collectContainers = require("collect.containers");
-var fillLinks = require("fill.links");
-var fillTerms = require("fill.terminals");
-var collectLinks = require("collect.links");
-var fillContainers = require("fill.containers");
 var linksMgr = require("mgr.links");
+var collect = require("collect");
+var fill = require("fill");
+
 var storageLinkMgr = {
 
     run: function (creep) {
@@ -32,10 +29,10 @@ var storageLinkMgr = {
                 if (upgradeLink && storageLink
                     && upgradeLink.store.getUsedCapacity(RESOURCE_ENERGY) > (upgradeLink.store.getCapacity(RESOURCE_ENERGY) / 2) + 100
                     && storageLink.store.getUsedCapacity(RESOURCE_ENERGY) > (storageLink.store.getCapacity(RESOURCE_ENERGY) / 2) + 100) {
-                    fillContainers.run(creep)
+                    fill.fillContainers(creep)
 
                 } else {
-                    fillLinks.run(creep);
+                    fill.fillLinks(creep);
 
                 }
             }
@@ -53,11 +50,11 @@ var storageLinkMgr = {
                     && storageLink.store.getUsedCapacity(RESOURCE_ENERGY) > ((storageLink.store.getCapacity(RESOURCE_ENERGY) / 2) + 100)) {
                     creep.memory.link = storageLink.id;
                     // console.log("Take from link")
-                    collectLinks.run(creep);
+                    collect.links(creep);
 
                 } else {
                     //base condition
-                    collectContainers.run(creep)
+                    collect.containers(creep)
                     //since upgrade Link isnt full, take energy from storage out
 
                 }

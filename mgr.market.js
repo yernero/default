@@ -76,51 +76,57 @@ var moneyMgr = {
     }
     ,
     manageRoomRes: function (room) {
-        var terminal = room.terminal;
-        if (terminal) {
-            roomName = room.name
-            //setup Room Resource
-            memMgr.setRoomRes(room);
-            if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-
-                console.log('Terminal storage is full or energy is more than 1/5 of the total capacity');
-                this.sellRes(room, RESOURCE_ENERGY, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
-                this.sellEnergy(room, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
-            } if (terminal.store.getUsedCapacity(Memory[roomName].terminal.roomRes) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(Memory[roomName].terminal.roomRes) === 0) {
-                 console.log("Too much res")
+        //console.log(room.terminal)
+        if(!room){
+            console.log("Invalid room passed to manageRoomRes " + room)
+        }else{
+            if (room.terminal) {
+                var terminal = room.terminal;
+                roomName = room.name
+                //setup Room Resource
+                memMgr.setRoomRes(room);
+                if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+    
+                    console.log('Terminal storage is full or energy is more than 1/5 of the total capacity');
+                    this.sellRes(room, RESOURCE_ENERGY, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
+                    this.sellEnergy(room, terminal.store.getUsedCapacity(RESOURCE_ENERGY) / 2)
+                } if (terminal.store.getUsedCapacity(Memory[roomName].terminal.roomRes) / terminal.store.getCapacity() > 0.2 || terminal.store.getFreeCapacity(Memory[roomName].terminal.roomRes) === 0) {
+                     console.log("Too much res")
+                } else {
+                    console.log('Terminal storage is not full and energy is less than 1/5 of the total capacity');
+                }
+                var res = Memory[roomName].terminal.roomRes[0].mineralType;
+                //console.log(res);
+    
+                //check if should sell
+                //creep.store.getCapacity()
+                var resAmount = room.terminal.store.getUsedCapacity(res);
+                //console.log(roomName + " " + res + ": " + resAmount);
+                if (resAmount > 10000) {
+                    this.sellRes(room, res);
+    
+                }
+    
+                //check if should sell energy
+                //find storage unit
+                var largestStore = null;
+                if (Memory[roomName].storage.storages[0]) {
+                    largestStore = Game.getObjectById(Memory[room.name].storage.storages[0].id);
+                }
+                //if terminal  > 50000 energy and can sell, and the storage is more than half full
+                if (room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 150000 &&
+                    room.terminal.cooldown < 1 &&
+                    largestStore &&
+                    largestStore.store.getUsedCapacity(RESOURCE_ENERGY) > largestStore.store.getCapacity() / 2) {
+                    console.log("trying to sell...")
+                    this.sellRes(room, RESOURCE_ENERGY);
+                }
+    
             } else {
-                console.log('Terminal storage is not full and energy is less than 1/5 of the total capacity');
+                //build a terminal
             }
-            var res = Memory[roomName].terminal.roomRes[0].mineralType;
-            //console.log(res);
-
-            //check if should sell
-            //creep.store.getCapacity()
-            var resAmount = room.terminal.store.getUsedCapacity(res);
-            //console.log(roomName + " " + res + ": " + resAmount);
-            if (resAmount > 10000) {
-                this.sellRes(room, res);
-
-            }
-
-            //check if should sell energy
-            //find storage unit
-            var largestStore = null;
-            if (Memory[roomName].storage.storages[0]) {
-                largestStore = Game.getObjectById(Memory[room.name].storage.storages[0].id);
-            }
-            //if terminal  > 50000 energy and can sell, and the storage is more than half full
-            if (room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 150000 &&
-                room.terminal.cooldown < 1 &&
-                largestStore &&
-                largestStore.store.getUsedCapacity(RESOURCE_ENERGY) > largestStore.store.getCapacity() / 2) {
-                console.log("trying to sell...")
-                this.sellRes(room, RESOURCE_ENERGY);
-            }
-
-        } else {
-            //build a terminal
         }
+        
 
 
 

@@ -1,24 +1,21 @@
-var roleRepairer = require("role.repairer");
-var collect = require("collect");
+var fill = require("fill");
 var memMgr = require("mgr.memory");
+var collect = require("collect");
 
-var roleBuilder = {
-
-	/** @param {Creep} creep **/
-	run: function (creep) {
-		//creep.memory.building =false;
-		var room = creep.room;
-		var roomName = room.name; var target = {};
-
-
-		if (creep.memory.building) {
-			if (creep.carry.energy == 0) {
-				//Go Harvest
+var roles = {
+    builder: function (creep) {
+        var room = creep.room;
+        var roomName = room.name;
+        var targets = {};
+        
+        //Build or collect
+        if(creep.memory.building){
+            //changing status
+            if (creep.store.getUsedCapacity() == 0) {
 				creep.memory.building = false;
 				creep.say('⚡');
 			} else {
-
-				//make sure a destination exists in creep memory
+                //make sure a destination exists in creep memory
 				if (!creep.memory.dest) {
 					//find all construction sites in room memory
 					memMgr.updateConstructionMem(room);
@@ -30,8 +27,9 @@ var roleBuilder = {
 					//if no construction sites, try to repair something
 					if (!targets || targets.length == 0) {
 						//hopefully sets a destination
-						roleRepairer.run(creep)
-					} else {
+						//roleRepairer.run(creep)
+                        console.log("decide action in builder")
+                    } else {
 						//depending on team set target destination
 						switch (creep.memory.team) {
 							case 1:
@@ -51,7 +49,8 @@ var roleBuilder = {
 				if (!dest || dest.hits > 0) {
 					creep.memory.dest = null;
 					//console.log(creep.name + " cannot find work in " + roomName)
-					roleRepairer.run(creep);
+					//roleRepairer.run(creep)
+                    console.log("decide action in builder")
 				} else {
 					var status = creep.build(dest);
 					switch (status) {
@@ -70,20 +69,75 @@ var roleBuilder = {
 
 
 
-			}
-		} else {
-			//make sure memory created
+			
+            }
+        }else{
+            //make sure memory created
 			creep.memory.building = false;
 			//changing status
 			if (creep.store.getFreeCapacity() == 0) {
 				creep.memory.building = true;
+                creep.say('🚧');
+
+                //TODO: fix?
 				creep.memory.dest = false;
-				creep.say('🚧');
+				
 			} else {
-				collect.containers(creep);
+				collect.containers.run(creep);
 			}
-		}
-	}
+        }
+
+    }
+    ,
+    defender: function (creep) {
+    }
+    ,
+    filler: function (creep) {
+    }
+    ,
+    harvester: function (creep) {
+    }
+    ,
+    importer: function (creep) {
+    }
+    ,
+    linkFiller: function (creep) {
+    }
+    ,
+    linkUpgrader: function (creep) {
+    }
+    ,
+    miner: function (creep) {
+    }
+    ,
+    recoverer: function (creep) {
+    }
+    ,
+    repairer: function (creep) {
+    }
+    ,
+    scavenger: function (creep) {
+    }
+    ,
+    settler: function (creep) {
+    }
+    ,
+    sourceFarmer: function (creep) {
+    }
+    ,
+    storageLink: function (creep) {
+    }
+    ,
+    towerGuard: function (creep) {
+    }
+    ,
+    upgrader: function (creep) {
+    }
+
+    
+
 };
 
-module.exports = roleBuilder;
+
+
+module.exports = roles;

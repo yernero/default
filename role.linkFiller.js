@@ -1,11 +1,7 @@
 var roleUpgrader = require("role.upgrader");
-var collectSources = require("collect.sources");
-var collectContainers = require("collect.containers");
-var fillLinks = require("fill.links");
-var fillTerms = require("fill.terminals");
-var collectLinks = require("collect.links");
-var fillContainers = require("fill.containers");
 var linksMgr = require("mgr.links");
+var collect = require("collect");
+var fill = require("fill");
 var roleFiller = {
 
 	/** @param {Creep} creep **/
@@ -49,20 +45,20 @@ var roleFiller = {
 						//console.log(link)
 
 						if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) < 50) {
-							collectLinks.run(creep);
+							collect.links(creep);
 							if (creep.carry.energy == creep.carryCapacity) {
 								creep.memory.storing = true;
 								creep.say('🧪');
 							}
 						} else {
 							if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 500) {
-								fillLinks.run(creep);
+								fill.fillLinks(creep);
 							} else if (room.terminal && room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) < 45000) {
 								creep.memory.mineral = RESOURCE_ENERGY;
-								fillTerms.run(creep);
+								fill.fillTerminals(creep);
 							} else {
 								creep.memory.mineral = RESOURCE_ENERGY;
-								fillContainers.run(creep);
+								fill.fillContainers(creep);
 							}
 						}
 
@@ -76,11 +72,11 @@ var roleFiller = {
 						var container = Game.getObjectById(creep.memory.container)
 						//console.log(container)
 						if (linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) > 250) {
-							fillLinks.run(creep);
-						} else if (container && container.store.getUsedCapacity(RESOURCE_ENERGY) / container.store.getCapacity(RESOURCE_ENERGY) > .1) {
+							fill.fillLinks(creep);
 							//console.log("valid container" + Game.getObjectById(creep.memory.container).store.getUsedCapacity(RESOURCE_ENERGY)/Game.getObjectById(creep.memory.container).store.getCapacity(RESOURCE_ENERGY))
 							creep.memory.mineral = RESOURCE_ENERGY;
-							fillTerms.run(creep);
+							fill.fillTerminals(creep);
+
 						} else {
 
 						}
@@ -111,7 +107,7 @@ var roleFiller = {
 
 						//console.log(upgradeLink);
 						if (upgradeLink.store.getFreeCapacity(RESOURCE_ENERGY) < 50) {
-							fillContainers.run(creep)
+							fill.fillContainers(creep);
 							if (creep.carry.energy == 0) {
 								creep.memory.storing = false;
 								creep.say('⚡')
@@ -120,9 +116,9 @@ var roleFiller = {
 							//if link is not full grab from container
 							if (linkToFill && linkToFill.store.getFreeCapacity(RESOURCE_ENERGY) < 5) {
 								console.log("Excess Energy in upgrade Link")
-								collectLinks.run(creep);
+								collect.links(creep);
 							} else {
-								collectContainers.run(creep);
+								collect.containers(creep);
 
 
 							}

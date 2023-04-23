@@ -1,5 +1,5 @@
 var roleUpgrader = require('role.upgrader');
-var collectContainers = require("collect.containers");
+var collect = require("collect");
 var memMgr = require("mgr.memory");
 var roleRepairer = {
 
@@ -100,7 +100,7 @@ var roleRepairer = {
 				creep.memory.repairing = true;
 				creep.say('🚧 repair');
 			} else {
-				collectContainers.run(creep);
+				collect.containers(creep);
 
 			}
 		}
